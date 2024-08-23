@@ -17,13 +17,10 @@ package cmd
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/gocolly/colly"
@@ -51,34 +48,24 @@ var rootCmd = &cobra.Command{
 
 ArcTracker analyses your licensing requirements by categorizing yout arcpy
 tools used.`,
+	Args: cobra.RangeArgs(0, 1),
 	Run: func(cmd *cobra.Command, args []string) {
+		var err error
+		var licenses []model.License
 		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 		zerolog.SetGlobalLevel(zerolog.Level(logLevel))
-		if len(args) == 0 {
-			reader := bufio.NewReader(os.Stdin)
-			content, err := io.ReadAll(reader)
-			cobra.CheckErr(err)
-			c := colly.NewCollector(
-				colly.AllowedDomains("pro.arcgis.com"),
-				colly.CacheDir("./cache"),
-			)
-			namespace := bytes.Split(content[0:len(content)-1], []byte("."))
-			url := fmt.Sprintf("https://pro.arcgis.com/en/pro-app/latest/tool-reference/%s/%s.htm", string(namespace[1]), strings.ToLower(string(namespace[2])))
-			s := scraper.New(c)
-			s.SetupLicenseScraper()
-			l := s.Scrape(url)
-			jsonData, err := json.Marshal(&l)
-			cobra.CheckErr(err)
-			fmt.Println(string(jsonData))
-			return
-		}
-		path := args[0]
 		c := colly.NewCollector(
 			colly.AllowedDomains("pro.arcgis.com"),
 			colly.CacheDir("./cache"),
 		)
 		s := scraper.New(c)
-		licenses, err := searcher.Search(path, &s)
+		if len(args) == 0 {
+			reader := bufio.NewReader(os.Stdin)
+			licenses, err = searcher.SearchWithStdin(reader, &s)
+		} else {
+			path := args[0]
+			licenses, err = searcher.SearchWithPath(path, &s)
+		}
 		cobra.CheckErr(err)
 		if isJSON {
 			jsonData, err := json.Marshal(&licenses)
