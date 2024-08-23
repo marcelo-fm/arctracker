@@ -17,10 +17,59 @@ import (
 	"github.com/spf13/viper"
 )
 
-func Search(path string, s *scraper.Scraper) ([]model.License, error) {
+func SearchWithPath(path string, s *scraper.Scraper) ([]model.License, error) {
 	pattern := viper.GetString("pattern")
-	baseURL := viper.GetString("baseURL")
 	content, err := execRG(pattern, path)
+	if err != nil {
+		return nil, err
+	}
+	return search(content, s)
+}
+
+func SearchWithStdin(reader io.Reader, s *scraper.Scraper) ([]model.License, error) {
+	pattern := viper.GetString("pattern")
+	var err error
+	log.Debug().Msgf("Searching for pattern %s", pattern)
+	cmd1 := exec.Command("rg", pattern, "--json")
+	cmd1.Stdin = reader
+	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
+	cmd2 := exec.Command("jq", ".", "-sc")
+	log.Debug().Msgf("Command 2: %s", strings.Join(cmd2.Args, " "))
+	log.Debug().Msg("linking commands")
+	cmd2.Stdin, err = cmd1.StdoutPipe()
+	if err != nil {
+		log.Error().Err(err).Msg("Error linking commands")
+		return nil, err
+	}
+	buf := new(bytes.Buffer)
+	writer := bytes.NewBuffer(buf.Bytes())
+	cmd2.Stdout = writer
+	err = cmd2.Start()
+	if err != nil {
+		log.Error().Err(err).Msg("Error starting command 2")
+		return nil, err
+	}
+	err = cmd1.Run()
+	if err != nil {
+		log.Error().Err(err).Msg("Error running command 1")
+		return nil, err
+	}
+	err = cmd2.Wait()
+	if err != nil {
+		log.Error().Err(err).Msg("Error waiting command 2")
+		return nil, err
+	}
+	content, err := io.ReadAll(writer)
+	if err != nil {
+		log.Error().Err(err).Msg("Error reading output")
+		return nil, err
+	}
+	return search(content, s)
+}
+
+func search(content []byte, s *scraper.Scraper) ([]model.License, error) {
+	var err error
+	baseURL := viper.GetString("baseURL")
 	var contentArr []Match
 	err = json.Unmarshal(content, &contentArr)
 	if err != nil {
