@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -21,6 +22,10 @@ func SearchWithPath(path string, s *scraper.Scraper) ([]model.License, error) {
 	pattern := viper.GetString("pattern")
 	content, err := execRG(pattern, path)
 	if err != nil {
+		if err.Error() == "exit status 1" {
+			log.Warn().Msgf("No arcpy tool found in %s", path)
+			os.Exit(0)
+		}
 		return nil, err
 	}
 	return search(content, s)
@@ -30,7 +35,7 @@ func SearchWithStdin(reader io.Reader, s *scraper.Scraper) ([]model.License, err
 	pattern := viper.GetString("pattern")
 	var err error
 	log.Debug().Msgf("Searching for pattern %s", pattern)
-	cmd1 := exec.Command("rg", pattern, "--json")
+	cmd1 := exec.Command("rg", pattern, "--json", "--trim")
 	cmd1.Stdin = reader
 	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
 	cmd2 := exec.Command("jq", ".", "-sc")
@@ -52,6 +57,10 @@ func SearchWithStdin(reader io.Reader, s *scraper.Scraper) ([]model.License, err
 	err = cmd1.Run()
 	if err != nil {
 		log.Error().Err(err).Msg("Error running command 1")
+		if err.Error() == "exit status 1" {
+			log.Warn().Msgf("No arcpy tool found in Stdin")
+			os.Exit(0)
+		}
 		return nil, err
 	}
 	err = cmd2.Wait()
@@ -101,7 +110,7 @@ func search(content []byte, s *scraper.Scraper) ([]model.License, error) {
 func execRG(pattern, path string) ([]byte, error) {
 	var err error
 	log.Debug().Msgf("Searching for pattern %s in %s", pattern, path)
-	cmd1 := exec.Command("rg", pattern, path, "--json", "--type=python")
+	cmd1 := exec.Command("rg", pattern, path, "--json", "--type=python", "--trim")
 	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
 	cmd2 := exec.Command("jq", ".", "-sc")
 	log.Debug().Msgf("Command 2: %s", strings.Join(cmd2.Args, " "))
@@ -196,13 +205,34 @@ func parseCommandChannel(ctx context.Context, in <-chan Match) <-chan string {
 	return out
 }
 
-func manageModule(module string) string {
+// parseModule retorna o nome do módulo correto para a URL.
+func parseModule(module string) string {
 	switch module {
 	case "management":
 		return "data-" + module
+	case "edit":
+		return "editing"
+	case "ddd":
+		return "3d-analyst"
 	default:
 		return module
 	}
+}
+
+// parseTool retorna o nome da ferramenta correto para a URL.
+func parseTool(toolName string) string {
+	switch toolName {
+	case "EncloseMultiPatch":
+		return "enclose-multipatch"
+	}
+	var tool string = strings.Clone(toolName)
+	for i, r := range toolName[1:] {
+		if !unicode.IsUpper(r) {
+			continue
+		}
+		tool = tool[:i+1] + "-" + tool[i+1:]
+	}
+	return strings.ToLower(tool)
 }
 
 func createURL(cmd string) string {
@@ -213,16 +243,10 @@ func createURL(cmd string) string {
 	}
 	cmdArr := strings.Split(cmd, ".")
 	lastIndex := len(cmdArr) - 1
-	tool := strings.Clone(cmdArr[lastIndex])
-	for i, r := range cmdArr[lastIndex][1:] {
-		if !unicode.IsUpper(r) {
-			continue
-		}
-		tool = tool[:i+1] + "-" + tool[i+1:]
-	}
+	tool := parseTool(cmdArr[lastIndex])
 	var url string
 	if len(cmdArr) == 3 {
-		module := manageModule(cmdArr[1])
+		module := parseModule(cmdArr[1])
 		url = fmt.Sprintf("%s/%s", module, strings.ToLower(tool))
 	} else if len(cmdArr) == 2 {
 		url = strings.ToLower(tool)
