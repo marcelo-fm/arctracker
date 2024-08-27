@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 
 	"github.com/charmbracelet/bubbles/table"
+	"github.com/elewis787/boa"
 	"github.com/gocolly/colly"
 	"github.com/marcelo-fm/arctracker/internal/model"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
@@ -130,6 +131,8 @@ func init() {
 	rootCmd.MarkFlagsMutuallyExclusive("json", "csv")
 	rootCmd.Flags().StringVar(&csvDelim, "delimiter", ",", "CSV field delimiter")
 	rootCmd.Flags().StringVar(&output, "output", "", "write the JSON or CSV output in a file")
+	rootCmd.SetUsageFunc(boa.UsageFunc)
+	rootCmd.SetHelpFunc(boa.HelpFunc)
 }
 
 func initConfig() {
