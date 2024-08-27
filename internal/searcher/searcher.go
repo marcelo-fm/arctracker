@@ -249,7 +249,14 @@ func createURL(cmd string) string {
 		module := parseModule(cmdArr[1])
 		url = fmt.Sprintf("%s/%s", module, strings.ToLower(tool))
 	} else if len(cmdArr) == 2 {
-		url = strings.ToLower(tool)
+		if strings.Contains(cmdArr[1], "_") {
+			cmd := strings.Split(cmdArr[1], "_")
+			tool := parseTool(cmd[0])
+			module := parseModule(cmd[1])
+			url = fmt.Sprintf("%s/%s", module, strings.ToLower(tool))
+		} else {
+			url = strings.ToLower(tool)
+		}
 	}
 	return url + ".htm"
 }
