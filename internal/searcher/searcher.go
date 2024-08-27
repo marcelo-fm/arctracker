@@ -110,7 +110,7 @@ func search(content []byte, s *scraper.Scraper) ([]model.License, error) {
 func execRG(pattern, path string) ([]byte, error) {
 	var err error
 	log.Debug().Msgf("Searching for pattern %s in %s", pattern, path)
-	cmd1 := exec.Command("rg", pattern, path, "--json", "--type=python", "--trim")
+	cmd1 := exec.Command("rg", pattern, path, "--json", "--type=py", "--trim")
 	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
 	cmd2 := exec.Command("jq", ".", "-sc")
 	log.Debug().Msgf("Command 2: %s", strings.Join(cmd2.Args, " "))
