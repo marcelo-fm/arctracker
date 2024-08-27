@@ -1,4 +1,5 @@
 [![Readme PT-BR](/assets/readme-pt-br.svg)](/docs/readme/readme-pt-br.md)
+
 # arctracker
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/marcelo-fm/arctracker?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/marcelo-fm/arctracker/.github%2Fworkflows%2Fgo.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/marcelo-fm/arctracker?style=for-the-badge) ![GitHub Tag](https://img.shields.io/github/v/tag/marcelo-fm/arctracker?style=for-the-badge)
@@ -21,6 +22,7 @@ passed in the pipeline, when executed without arguments.
 The application has [ripgrep](https://github.com/BurntSushi/ripgrep) as requirement for the recursive search in the directory and in Stdin, and [jq](https://github.com/jqlang/jq) for the formatting of ripgrep's result.
 
 Below are the installations steps for each tool:
+
 - [ripgrep](https://github.com/BurntSushi/ripgrep?tab=readme-ov-file#installation)
 - [jq](https://github.com/jqlang/jq?tab=readme-ov-file#installation)
 
