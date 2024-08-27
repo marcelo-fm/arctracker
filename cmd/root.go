@@ -124,7 +124,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is in config directory)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is in config directory)")
 	rootCmd.PersistentFlags().IntVar(&logLevel, "loglevel", 4, "log level")
 	rootCmd.Flags().BoolVar(&isJSON, "json", false, "output the result as a JSON")
 	rootCmd.Flags().BoolVar(&isCSV, "csv", false, "output the result as a CSV")
