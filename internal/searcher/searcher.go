@@ -214,6 +214,24 @@ func parseModule(module string) string {
 		return "editing"
 	case "ddd":
 		return "3d-analyst"
+	case "gapro":
+		return "geoanalytics-desktop"
+	case "md":
+		return "multidimension"
+	case "nd":
+		return "network-diagram"
+	case "oi":
+		return "oriented-imagery"
+	case "transit":
+		return "public-transit"
+	case "rm":
+		return "reality-mapping"
+	case "stats":
+		return "spatial-statistics"
+	case "tn":
+		return "trace-network"
+	case "un":
+		return "utility-networks"
 	default:
 		return module
 	}
@@ -230,6 +248,9 @@ func parseTool(toolName string) string {
 		if !unicode.IsUpper(r) {
 			continue
 		}
+		// if unicode.IsUpper(rune(toolName[i])) {
+		// 	tool = tool[:i] + tool[i+1:]
+		// }
 		tool = tool[:i+1] + "-" + tool[i+1:]
 	}
 	return strings.ToLower(tool)
