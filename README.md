@@ -42,7 +42,7 @@ I'm working in creating packages for most linux distros and windows package mana
 
 ArcTracker has two ways of using it. First is by recursively searching for arcpy tools used within a project. To do that, simply pass the path of the directory to view a interactive table of the tools used in the project and the level of licenses required to run them.
 
-![/assets/arctracker.gif]
+![ArcTracker Usage](/assets/arctracker.gif)
 
 You can also pass the flag `--json` to return the output as JSON, or the flag `--csv` to return the output as a CSV.
 
