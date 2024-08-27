@@ -9,7 +9,7 @@ depends=("ripgrep>=14.1.0" "jq>=1.7.1")
 makedepends=("go>=1.23.0" "git")
 license=("Apache-2.0")
 sha512sums=("SKIP")
-source=("$pgkname-$pkgver.tar.gz::https://github.com/marcelo-fm/arctracker/archive/refs/tags/$pkgver.tar.gz")
+source=("$pgkname-$pkgver.tar.gz::https://github.com/marcelo-fm/arctracker/archive/refs/tags/v$pkgver.tar.gz")
 
 build() {
 	cd "$pkgname-$pkgver" && go build -o arctracker main.go
