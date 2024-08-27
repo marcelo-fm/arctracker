@@ -22,8 +22,19 @@ func LicenseColumns() []table.Column {
 	}
 }
 
-func (l *License) ToRow() table.Row {
-	return table.Row{
+func CSVHeaders() []string {
+	return []string{
+		"Título",
+		"Comando",
+		"Basic",
+		"Standard",
+		"Advanced",
+		"URL",
+	}
+}
+
+func (l *License) ToRow() []string {
+	return []string{
 		l.Title,
 		l.Name,
 		l.Basic,
@@ -31,4 +42,8 @@ func (l *License) ToRow() table.Row {
 		l.Advanced,
 		l.URL,
 	}
+}
+
+func (l *License) ToTableRow() table.Row {
+	return table.Row(l.ToRow())
 }
