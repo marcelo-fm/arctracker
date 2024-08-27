@@ -33,7 +33,7 @@ Estou trabalhando na criação de pacotes para a maioria das distribuições Lin
 
 ArcTracker tem duas formas de uso. A primeira é buscando recursivamente por ferramentas arcpy usadas em um projeto. Para isso, basta passar o caminho do diretório para visualizar uma tabela interativa das ferramentas usadas no projeto e o nível de licenças necessárias para executá-las.
 
-![/assets/arctracker.gif]
+![ArcTracker Usage](/assets/arctracker.gif)
 
 Você também pode passar a flag `--json` para retornar a saída como JSON, ou a flag `--csv` para retornar a saída como CSV.
 
