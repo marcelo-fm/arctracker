@@ -17,8 +17,8 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -29,6 +29,7 @@ import (
 	"github.com/marcelo-fm/arctracker/internal/searcher"
 	"github.com/marcelo-fm/arctracker/internal/ui"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -37,6 +38,8 @@ var (
 	cfgFile  string
 	isJSON   bool
 	isCSV    bool
+	csvDelim string
+	output   string
 	logLevel int
 )
 
@@ -67,15 +70,35 @@ tools used.`,
 			licenses, err = searcher.SearchWithPath(path, &s)
 		}
 		cobra.CheckErr(err)
-		if isJSON {
-			jsonData, err := json.Marshal(&licenses)
+		writer := os.Stdout
+		if output != "" {
+			file, err := os.Create(output)
 			cobra.CheckErr(err)
-			fmt.Println(string(jsonData))
+			defer file.Close()
+			writer = file
+		}
+		if isJSON {
+			encoder := json.NewEncoder(writer)
+			err := encoder.Encode(&licenses)
+			cobra.CheckErr(err)
+			return
+		}
+		if isCSV {
+			records := make([][]string, len(licenses)+1)
+			records[0] = model.CSVHeaders()
+			for i, l := range licenses {
+				records[i+1] = l.ToRow()
+			}
+			w := csv.NewWriter(writer)
+			w.WriteAll(records)
+			if err := w.Error(); err != nil {
+				log.Fatal().Err(err).Msg("error writing csv")
+			}
 			return
 		}
 		tbRows := make([]table.Row, len(licenses))
 		for i, l := range licenses {
-			tbRows[i] = l.ToRow()
+			tbRows[i] = l.ToTableRow()
 		}
 		tb := ui.New(model.LicenseColumns(), tbRows)
 		tb.Run()
@@ -100,10 +123,13 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.arctracker.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is in config directory)")
 	rootCmd.PersistentFlags().IntVar(&logLevel, "loglevel", 4, "log level")
-	rootCmd.Flags().BoolVar(&isJSON, "json", false, "output the result as a json")
-	rootCmd.Flags().BoolVar(&isCSV, "csv", false, "output the result as a csv")
+	rootCmd.Flags().BoolVar(&isJSON, "json", false, "output the result as a JSON")
+	rootCmd.Flags().BoolVar(&isCSV, "csv", false, "output the result as a CSV")
+	rootCmd.MarkFlagsMutuallyExclusive("json", "csv")
+	rootCmd.Flags().StringVar(&csvDelim, "delimiter", ",", "CSV field delimiter")
+	rootCmd.Flags().StringVar(&output, "output", "", "write the JSON or CSV output in a file")
 }
 
 func initConfig() {
@@ -112,11 +138,8 @@ func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find configDir directory.
 		configDir, err := os.UserConfigDir()
 		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".arctracker" (without extension).
 		appConfigDir := filepath.Join(configDir, "arctracker")
 		err = os.MkdirAll(appConfigDir, 0755)
 		cobra.CheckErr(err)
