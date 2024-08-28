@@ -1,10 +1,10 @@
-package searcher
+package parser
 
 type Matcher interface {
 	GetType() string
 }
 
-type Match struct {
+type match struct {
 	Type string `json:"type"`
 	Data *struct {
 		Path struct {
@@ -14,10 +14,6 @@ type Match struct {
 			Text string `json:"text"`
 		} `json:"lines"`
 	} `json:"data"`
-}
-
-func (m *Match) GetType() string {
-	return m.Type
 }
 
 type Summary struct {

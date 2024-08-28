@@ -1,13 +1,8 @@
-package searcher
+package parser
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"os"
-	"os/exec"
 	"strings"
 	"sync"
 	"unicode"
@@ -18,78 +13,26 @@ import (
 	"github.com/spf13/viper"
 )
 
-func SearchWithPath(path string, s *scraper.Scraper) ([]model.License, error) {
-	pattern := viper.GetString("pattern")
-	content, err := execRG(pattern, path)
-	if err != nil {
-		if err.Error() == "exit status 1" {
-			log.Warn().Msgf("No arcpy tool found in %s", path)
-			os.Exit(0)
-		}
-		return nil, err
-	}
-	return search(content, s)
+// Searcher é uma interface que define a busca de comandos arcpy.
+// Search retorna um array de Match, que contém a palavra chave e o texto encontrado.
+// O texto encontrado é a linha do arquivo de texto que contém a palavra chave.
+// Comunmente, a busca é realizada em diretórios de arquivos python, ou por uma
+// pipeline de busca de texto. A interface permite que a busca seja realizada a
+// partir de diversas fontes de dados.
+type Searcher interface {
+	Search() ([]model.Match, error)
 }
 
-func SearchWithStdin(reader io.Reader, s *scraper.Scraper) ([]model.License, error) {
-	pattern := viper.GetString("pattern")
-	var err error
-	log.Debug().Msgf("Searching for pattern %s", pattern)
-	cmd1 := exec.Command("rg", pattern, "--json", "--trim")
-	cmd1.Stdin = reader
-	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
-	cmd2 := exec.Command("jq", ".", "-sc")
-	log.Debug().Msgf("Command 2: %s", strings.Join(cmd2.Args, " "))
-	log.Debug().Msg("linking commands")
-	cmd2.Stdin, err = cmd1.StdoutPipe()
+// Parser recebe um Searcher e um Scraper, e retorna uma lista com as licenças, ou nil
+// se não houver nenhuma
+func Parse(searcher Searcher, s *scraper.Scraper) ([]model.License, error) {
+	contentArr, err := searcher.Search()
 	if err != nil {
-		log.Error().Err(err).Msg("Error linking commands")
 		return nil, err
 	}
-	buf := new(bytes.Buffer)
-	writer := bytes.NewBuffer(buf.Bytes())
-	cmd2.Stdout = writer
-	err = cmd2.Start()
-	if err != nil {
-		log.Error().Err(err).Msg("Error starting command 2")
-		return nil, err
-	}
-	err = cmd1.Run()
-	if err != nil {
-		log.Error().Err(err).Msg("Error running command 1")
-		if err.Error() == "exit status 1" {
-			log.Warn().Msgf("No arcpy tool found in Stdin")
-			os.Exit(0)
-		}
-		return nil, err
-	}
-	err = cmd2.Wait()
-	if err != nil {
-		log.Error().Err(err).Msg("Error waiting command 2")
-		return nil, err
-	}
-	content, err := io.ReadAll(writer)
-	if err != nil {
-		log.Error().Err(err).Msg("Error reading output")
-		return nil, err
-	}
-	return search(content, s)
-}
-
-func search(content []byte, s *scraper.Scraper) ([]model.License, error) {
-	var err error
 	baseURL := viper.GetString("baseURL")
-	var contentArr []Match
-	err = json.Unmarshal(content, &contentArr)
-	if err != nil {
-		log.Error().Err(err).Msg("Error unmarshalling content")
-		return nil, err
-	}
 	licenses := make([]model.License, 0, len(contentArr))
 	for _, content := range contentArr {
-		if content.Type != "match" {
-			continue
-		}
 		cmd := parseCommand(content)
 		if cmd == "" {
 			continue
@@ -104,62 +47,19 @@ func search(content []byte, s *scraper.Scraper) ([]model.License, error) {
 			licenses = append(licenses, license)
 		}
 	}
+	if licenses == nil {
+		return nil, nil
+	}
 	return licenses, nil
-}
-
-func execRG(pattern, path string) ([]byte, error) {
-	var err error
-	log.Debug().Msgf("Searching for pattern %s in %s", pattern, path)
-	cmd1 := exec.Command("rg", pattern, path, "--json", "--type=py", "--trim")
-	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
-	cmd2 := exec.Command("jq", ".", "-sc")
-	log.Debug().Msgf("Command 2: %s", strings.Join(cmd2.Args, " "))
-	log.Debug().Msg("linking commands")
-	cmd2.Stdin, err = cmd1.StdoutPipe()
-	if err != nil {
-		log.Error().Err(err).Msg("Error linking commands")
-		return nil, err
-	}
-	buf := new(bytes.Buffer)
-	writer := bytes.NewBuffer(buf.Bytes())
-	cmd2.Stdout = writer
-	err = cmd2.Start()
-	if err != nil {
-		log.Error().Err(err).Msg("Error starting command 2")
-		return nil, err
-	}
-	err = cmd1.Run()
-	if err != nil {
-		log.Error().Err(err).Msg("Error running command 1")
-		return nil, err
-	}
-	err = cmd2.Wait()
-	if err != nil {
-		log.Error().Err(err).Msg("Error waiting command 2")
-		return nil, err
-	}
-	out, err := io.ReadAll(writer)
-	if err != nil {
-		log.Error().Err(err).Msg("Error reading output")
-		return nil, err
-	}
-	return out, nil
-}
-
-type TypeContent struct {
-	Type string `json:"type"`
 }
 
 // genContent gera o chanel de bytes, que representa cada achado da palavra chave com
 // regex.
-func genContent(ctx context.Context, in []Match) <-chan Match {
-	out := make(chan Match)
+func genContent(ctx context.Context, in []model.Match) <-chan model.Match {
+	out := make(chan model.Match)
 	go func() {
 		defer close(out)
 		for _, content := range in {
-			if content.Type != "match" {
-				continue
-			}
 			select {
 			case out <- content:
 			case <-ctx.Done():
@@ -170,9 +70,9 @@ func genContent(ctx context.Context, in []Match) <-chan Match {
 	return out
 }
 
-func parseCommand(match Match) string {
-	fullCmd := strings.Trim(match.Data.Lines.Text, " ")
-	log.Debug().Msgf("Cmd of %s: %s", match.Data.Path.Text, fullCmd)
+func parseCommand(match model.Match) string {
+	fullCmd := strings.Trim(match.Text, " ")
+	log.Debug().Msgf("Cmd of %s: %s", match.Text, fullCmd)
 	startIndex := strings.Index(fullCmd, "arcpy.")
 	if startIndex == -1 {
 		return ""
@@ -189,7 +89,7 @@ func parseCommand(match Match) string {
 	return fullCmd[startIndex:endIndex]
 }
 
-func parseCommandChannel(ctx context.Context, in <-chan Match) <-chan string {
+func parseCommandChannel(ctx context.Context, in <-chan model.Match) <-chan string {
 	out := make(chan string)
 	go func() {
 		defer close(out)
@@ -248,9 +148,6 @@ func parseTool(toolName string) string {
 		if !unicode.IsUpper(r) {
 			continue
 		}
-		// if unicode.IsUpper(rune(toolName[i])) {
-		// 	tool = tool[:i] + tool[i+1:]
-		// }
 		tool = tool[:i+1] + "-" + tool[i+1:]
 	}
 	return strings.ToLower(tool)
