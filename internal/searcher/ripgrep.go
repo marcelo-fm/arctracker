@@ -21,6 +21,12 @@ func NewRipgrep(isStdin bool, path string) *Ripgrep {
 		log.Warn().Msg("ripgrep is not in PATH")
 		return nil
 	}
+	cmd = exec.Command("jq", "--version")
+	err = cmd.Run()
+	if err != nil {
+		log.Warn().Msg("ripgrep is not in PATH")
+		return nil
+	}
 	return &Ripgrep{isStdin: isStdin, path: path}
 }
 
