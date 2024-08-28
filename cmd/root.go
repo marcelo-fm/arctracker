@@ -62,9 +62,15 @@ tools used.`,
 		var path string
 		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 		zerolog.SetGlobalLevel(zerolog.Level(logLevel))
+		appConfigDir := viper.GetString("AppConfigDir")
+		cacheDir := filepath.Join(appConfigDir, "cache")
+		err = os.MkdirAll(cacheDir, 0755)
+		if err != nil {
+			log.Error().Err(err).Msg("Error creating cache directory.")
+		}
 		c := colly.NewCollector(
 			colly.AllowedDomains("pro.arcgis.com"),
-			colly.CacheDir("./cache"),
+			colly.CacheDir(viper.GetString("cacheDir")),
 		)
 		s := scraper.New(c)
 		if len(args) == 0 {
@@ -162,8 +168,16 @@ func initConfig() {
 		configDir, err := os.UserConfigDir()
 		cobra.CheckErr(err)
 		appConfigDir := filepath.Join(configDir, "arctracker")
+		viper.SetDefault("appConfigDir", appConfigDir)
 		err = os.MkdirAll(appConfigDir, 0755)
 		cobra.CheckErr(err)
+		cacheDir := filepath.Join(appConfigDir, "cache")
+		err = os.MkdirAll(cacheDir, 0755)
+		if err != nil {
+			log.Error().Err(err).Msg("Error creating cache directory.")
+			cobra.CheckErr(err)
+		}
+		viper.SetDefault("cacheDir", cacheDir)
 		viper.AddConfigPath(appConfigDir)
 		viper.SetConfigType("toml")
 		viper.SetConfigName("config")
