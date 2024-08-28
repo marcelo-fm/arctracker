@@ -16,16 +16,18 @@ limitations under the License.
 package cmd
 
 import (
-	"bufio"
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/elewis787/boa"
 	"github.com/gocolly/colly"
 	"github.com/marcelo-fm/arctracker/internal/model"
+	"github.com/marcelo-fm/arctracker/internal/parser"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/marcelo-fm/arctracker/internal/searcher"
 	"github.com/marcelo-fm/arctracker/internal/ui"
@@ -56,6 +58,8 @@ tools used.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error
 		var licenses []model.License
+		var isStdin bool
+		var path string
 		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 		zerolog.SetGlobalLevel(zerolog.Level(logLevel))
 		c := colly.NewCollector(
@@ -64,13 +68,27 @@ tools used.`,
 		)
 		s := scraper.New(c)
 		if len(args) == 0 {
-			reader := bufio.NewReader(os.Stdin)
-			licenses, err = searcher.SearchWithStdin(reader, &s)
+			isStdin = true
 		} else {
-			path := args[0]
-			licenses, err = searcher.SearchWithPath(path, &s)
+			path = args[0]
 		}
-		cobra.CheckErr(err)
+		var srch parser.Searcher
+		srch = searcher.NewRipgrep(isStdin, path)
+		if srch == nil {
+			switch runtime.GOOS {
+			case "linux":
+				srch = searcher.NewGrep(isStdin, path)
+			default:
+				fmt.Println("No searcher found, please install ripgrep to run the program.")
+				os.Exit(1)
+			}
+		}
+		licenses, err = parser.Parse(srch, &s)
+		if err != nil {
+			log.Error().Err(err).Msg("Error in parsing licenses.")
+			cobra.CheckErr(err)
+		}
+
 		writer := os.Stdout
 		if output != "" {
 			file, err := os.Create(output)
