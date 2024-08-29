@@ -5,7 +5,7 @@ pkgrel=1
 pkgdesc="ArcPy License Tracker"
 url="https://github.com/marcelo-fm/arctracker"
 arch=("x86_64")
-depends=("ripgrep>=13.0" "jq>=1.6")
+optdepends=("ripgrep>=13.0" "jq>=1.6")
 makedepends=("go>=1.23.0" "git")
 license=("Apache-2.0")
 sha512sums=("SKIP")
