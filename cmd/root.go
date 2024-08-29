@@ -79,8 +79,9 @@ tools used.`,
 			path = args[0]
 		}
 		var srch parser.Searcher
-		srch = searcher.NewRipgrep(isStdin, path)
-		if srch == nil {
+		if searcher.HasRipgrepDeps() {
+			srch = searcher.NewRipgrep(isStdin, path)
+		} else {
 			switch runtime.GOOS {
 			case "linux":
 				srch = searcher.NewGrep(isStdin, path)
