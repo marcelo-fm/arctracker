@@ -17,9 +17,12 @@ argument, and it will scrape the licensing for each tool used in the python
 scripts. It can be also used within a pipeline, by reading the command of a tool
 passed in the pipeline, when executed without arguments.
 
-## Requirements
+## Optional Requirements
 
-The application has [ripgrep](https://github.com/BurntSushi/ripgrep) as requirement for the recursive search in the directory and in Stdin, and [jq](https://github.com/jqlang/jq) for the formatting of ripgrep's result.
+The application no required dependencies, but it some optional dependencies such
+as [ripgrep](https://github.com/BurntSushi/ripgrep) for the recursive search in
+the directory and in Stdin, and [jq](https://github.com/jqlang/jq) for the
+formatting of ripgrep's result.
 
 Below are the installations steps for each tool:
 
@@ -34,6 +37,15 @@ install it with go by executing:
 
 ```go
 go install github.com/marcelo-fm/arctracker@latest
+```
+
+## Debian and Ubuntu
+
+You can download the .deb package through the latest [release](https://github.com/marcelo-fm/arctracker/releases)
+and install it with `dpkg`. Below is an example in one line for the release tag _1.1.0_:
+
+```bash
+curl -L -o https://github.com/marcelo-fm/arctracker/releases/download/v1.1.0/arctracker_1.1.0-1_amd64.deb && sudo dpkg -i arctracker_1.1.0-1_amd64.deb
 ```
 
 I'm working in creating packages for most linux distros and windows package managers.
