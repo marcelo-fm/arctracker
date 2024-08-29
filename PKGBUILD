@@ -1,6 +1,6 @@
 # Maintainer: MARCELO MESQUITA <marcelofosmesquita@gmail.com>
 pkgname="arctracker"
-pkgver="1.0.0"
+pkgver="1.1.0"
 pkgrel=1
 pkgdesc="ArcPy License Tracker"
 url="https://github.com/marcelo-fm/arctracker"
