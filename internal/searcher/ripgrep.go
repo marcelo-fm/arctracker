@@ -14,17 +14,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewRipgrep(isStdin bool, path string) *Ripgrep {
+func HasRipgrepDeps() bool {
 	cmd := exec.Command("rg", "--version")
 	err := cmd.Run()
 	if err != nil {
 		log.Warn().Msg("ripgrep is not in PATH")
-		return nil
+		return false
 	}
 	cmd = exec.Command("jq", "--version")
 	err = cmd.Run()
 	if err != nil {
 		log.Warn().Msg("ripgrep is not in PATH")
+		return false
+	}
+	return true
+}
+
+func NewRipgrep(isStdin bool, path string) *Ripgrep {
+	if !HasRipgrepDeps() {
 		return nil
 	}
 	return &Ripgrep{isStdin: isStdin, path: path}
