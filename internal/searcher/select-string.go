@@ -29,34 +29,16 @@ func (r *SelectString) Search() ([]model.Match, error) {
 	var err error
 	pattern := viper.GetString("pattern")
 	path := r.path
-	argsCmd1 := []string{"-Command", "Get-ChildItem", "-Path", path, "-Recurse"}
+	argsCmd1 := []string{"-Command", "Get-ChildItem", "-Path", path, "-Recurse", "|", "Select-String", "-Pattern", pattern, "-Encoding", "UTF8"}
 	log.Debug().Msgf("Searching for pattern %s in %s", pattern, path)
 	cmd1 := exec.Command("powershell", argsCmd1...)
 	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
-	cmd2 := exec.Command("Select-String", "-Pattern", pattern, "-Encoding", "UTF8")
-	log.Debug().Msgf("Command 2: %s", strings.Join(cmd2.Args, " "))
-	log.Debug().Msg("linking commands")
-	cmd2.Stdin, err = cmd1.StdoutPipe()
-	if err != nil {
-		log.Error().Err(err).Msg("Error linking commands")
-		return nil, err
-	}
 	buf := new(bytes.Buffer)
 	writer := bytes.NewBuffer(buf.Bytes())
-	cmd2.Stdout = writer
-	err = cmd2.Start()
-	if err != nil {
-		log.Error().Err(err).Msg("Error starting command 2")
-		return nil, err
-	}
+	cmd1.Stdout = writer
 	err = cmd1.Run()
 	if err != nil {
 		log.Error().Err(err).Msg("Error running command 1")
-		return nil, err
-	}
-	err = cmd2.Wait()
-	if err != nil {
-		log.Error().Err(err).Msg("Error waiting command 2")
 		return nil, err
 	}
 	out, err := io.ReadAll(writer)
