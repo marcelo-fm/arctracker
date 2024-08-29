@@ -24,8 +24,8 @@ import (
 	"runtime"
 
 	"github.com/charmbracelet/bubbles/table"
-	"github.com/elewis787/boa"
 	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/internal/model"
 	"github.com/marcelo-fm/arctracker/internal/parser"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
@@ -72,6 +72,7 @@ tools used.`,
 			colly.AllowedDomains("pro.arcgis.com"),
 			colly.CacheDir(viper.GetString("cacheDir")),
 		)
+		extensions.RandomUserAgent(c)
 		s := scraper.New(c)
 		if len(args) == 0 {
 			isStdin = true
@@ -151,15 +152,12 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is in config directory)")
 	rootCmd.PersistentFlags().IntVar(&logLevel, "loglevel", 4, "log level")
 	rootCmd.Flags().BoolVar(&isJSON, "json", false, "output the result as a JSON")
 	rootCmd.Flags().BoolVar(&isCSV, "csv", false, "output the result as a CSV")
 	rootCmd.MarkFlagsMutuallyExclusive("json", "csv")
 	rootCmd.Flags().StringVar(&csvDelim, "delimiter", ",", "CSV field delimiter")
 	rootCmd.Flags().StringVar(&output, "output", "", "write the JSON or CSV output in a file")
-	rootCmd.SetUsageFunc(boa.UsageFunc)
-	rootCmd.SetHelpFunc(boa.HelpFunc)
 }
 
 func initConfig() {
