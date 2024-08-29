@@ -91,7 +91,7 @@ in it.`,
 			case "linux":
 				srch = searcher.NewGrep(isStdin, path)
 			case "windows":
-				srch = searcher.NewFindstr(isStdin, path)
+				srch = searcher.NewSelectString(isStdin, path)
 			default:
 				fmt.Println("No searcher found, please install ripgrep to run the program.")
 				os.Exit(1)
