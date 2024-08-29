@@ -33,7 +33,7 @@ func (r *Grep) Search() ([]model.Match, error) {
 	var reader *bufio.Reader
 	pattern := viper.GetString("pattern")
 	path := r.path
-	argsCmd1 := []string{"-r", "--include", "'*.py'", pattern, path}
+	argsCmd1 := []string{"-r", "--include", "*.py", pattern, path}
 	if r.isStdin {
 		path = "Stdin"
 		argsCmd1 = []string{pattern}
