@@ -40,7 +40,10 @@ func (r *Findstr) Search() ([]model.Match, error) {
 		if !strings.HasSuffix(filename, ".py") {
 			return nil
 		}
-		fileMatches, err := searchFile(path)
+    log.Debug().Msgf("raw path: %s", path)
+    cleanPath := filepath.Clean(path)
+    log.Debug().Msgf("Searching in path: %s", cleanPath)
+		fileMatches, err := searchFile(cleanPath)
 		if err != nil {
 			return err
 		}
