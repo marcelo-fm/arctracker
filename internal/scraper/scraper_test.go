@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/gocolly/colly"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
@@ -23,8 +22,15 @@ func TestNew(t *testing.T) {
 		colly.CacheDir("./cache"),
 	)
 	s := New(c)
-	assert.NotNil(t, s.c)
-	assert.NotNil(t, s.l)
+	if s.c == nil {
+		t.Error("collector is nil, expected a Collector")
+	}
+	if s.l == nil {
+		t.Error("license is nil, expected a empty License model")
+	}
+	if s.l.Name != "" || s.l.Title != "" {
+		t.Error("expected an empty License")
+	}
 }
 
 func TestSetupLicenseScraper(t *testing.T) {
@@ -35,8 +41,13 @@ func TestSetupLicenseScraper(t *testing.T) {
 	s := New(c)
 	s.SetupLicenseScraper()
 
-	assert.NotNil(t, s.c)
-	assert.NotNil(t, s.l)
+	if s.c == nil {
+		t.Error("Expected s.c not to be nil")
+	}
+
+	if s.l == nil {
+		t.Error("Expected s.l not to be nil")
+	}
 }
 
 func TestScrape(t *testing.T) {
@@ -52,10 +63,27 @@ func TestScrape(t *testing.T) {
 	license := s.Scrape(url)
 
 	// Replace with expected values
-	assert.Equal(t, "Buffer (Analysis)", license.Title)
-	assert.Equal(t, "arcpy.analysis.Buffer", license.Name)
-	assert.Equal(t, "Limited", license.Basic)
-	assert.Equal(t, "Limited", license.Standard)
-	assert.Equal(t, "Yes", license.Advanced)
-	assert.Equal(t, url, license.URL)
+	if license.Title != "Buffer (Analysis)" {
+		t.Errorf("Expected license.Title to be 'Buffer (Analysis)', got %v", license.Title)
+	}
+
+	if license.Name != "arcpy.analysis.Buffer" {
+		t.Errorf("Expected license.Name to be 'arcpy.analysis.Buffer', got %v", license.Name)
+	}
+
+	if license.Basic != "Limited" {
+		t.Errorf("Expected license.Basic to be 'Limited', got %v", license.Basic)
+	}
+
+	if license.Standard != "Limited" {
+		t.Errorf("Expected license.Standard to be 'Limited', got %v", license.Standard)
+	}
+
+	if license.Advanced != "Yes" {
+		t.Errorf("Expected license.Advanced to be 'Yes', got %v", license.Advanced)
+	}
+
+	if license.URL != url {
+		t.Errorf("Expected license.URL to be %v, got %v", url, license.URL)
+	}
 }
