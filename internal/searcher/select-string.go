@@ -49,8 +49,10 @@ func (r *SelectString) Search() ([]model.Match, error) {
 	lines := bytes.Split(out, []byte("\n"))
 	matches := make([]model.Match, len(lines))
 	for i, line := range lines {
+		log.Debug().Msgf("Line %d: %s", i, string(line))
 		arr := bytes.Split(line, []byte(":"))
-		matches[i] = model.Match{Path: string(arr[0]), Text: string(arr[2])}
+		log.Debug().Msgf("len of lineArr %d: %d", i, len(arr))
+		matches[i] = model.Match{Path: string(arr[0]), Text: string(arr[len(arr)-1])}
 	}
 	return matches, nil
 }
