@@ -84,6 +84,8 @@ tools used.`,
 			switch runtime.GOOS {
 			case "linux":
 				srch = searcher.NewGrep(isStdin, path)
+			case "windows":
+				srch = searcher.NewFindstr(isStdin, path)
 			default:
 				fmt.Println("No searcher found, please install ripgrep to run the program.")
 				os.Exit(1)
