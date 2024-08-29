@@ -51,9 +51,13 @@ var rootCmd = &cobra.Command{
 	Use:   "arctracker",
 	Short: "Track your ArcGIS License requirements.",
 	Long: `Track your ArcGIS License and extension requirements in your project.
+ArcTracker analyses your licensing requirements by categorizing your arcpy
+tools used.
 
-ArcTracker analyses your licensing requirements by categorizing yout arcpy
-tools used.`,
+To use it, just pass the path of the folder with arcpy python code, or use the
+tool within a pipeline by calling it without arguments. Doing so will parse the
+result of the previous command in the pipeline and return the arcpy tools present
+in it.`,
 	Args: cobra.RangeArgs(0, 1),
 	Run: func(cmd *cobra.Command, args []string) {
 		var err error
@@ -119,6 +123,9 @@ tools used.`,
 				records[i+1] = l.ToRow()
 			}
 			w := csv.NewWriter(writer)
+			if len(csvDelim) == 1 {
+				w.Comma = rune(csvDelim[0])
+			}
 			w.WriteAll(records)
 			if err := w.Error(); err != nil {
 				log.Fatal().Err(err).Msg("error writing csv")
