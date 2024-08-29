@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="ArcTracker" Language="1033" Version="1.1.0.0" Manufacturer="YourCompany" UpgradeCode="PUT-GUID-HERE">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+
+    <Media Id="1" Cabinet="cab1.cab" EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="ArcTrackerFolder" Name="arctracker">
+          <Component Id="MainExecutable" Guid="PUT-GUID-HERE">
+            <File Id="ArcTrackerExe" Source="arctracker.exe" KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="MainFeature" Title="ArcTracker" Level="1">
+      <ComponentRef Id="MainExecutable" />
+    </Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="ArcTrackerFolder" />
+    <UIRef Id="WixUI_InstallDir" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+  </Product>
+</Wix>
+
