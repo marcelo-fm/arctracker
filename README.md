@@ -1,5 +1,7 @@
 [![Readme PT-BR](/assets/readme-pt-br.svg)](/docs/readme/readme-pt-br.md)
 
+![Logo](/assets/arctracker-logo.svg)
+
 # arctracker
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/marcelo-fm/arctracker?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/marcelo-fm/arctracker/.github%2Fworkflows%2Fgo.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/marcelo-fm/arctracker?style=for-the-badge) ![GitHub Tag](https://img.shields.io/github/v/tag/marcelo-fm/arctracker?style=for-the-badge)
