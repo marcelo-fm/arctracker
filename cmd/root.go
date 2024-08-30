@@ -141,15 +141,6 @@ in it.`,
 	},
 }
 
-type License struct {
-	Title    string `json:"title"`
-	Name     string `json:"name"`
-	Basic    string `json:"basic"`
-	Standard string `json:"standard"`
-	Advanced string `json:"advanced"`
-	Url      string `json:"url"`
-}
-
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
