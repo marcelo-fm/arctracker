@@ -21,7 +21,7 @@ passed in the pipeline, when executed without arguments.
 
 ## Optional Requirements
 
-The application no required dependencies, but it some optional dependencies such
+The application no required dependencies, but it has some optional dependencies that improve performance, such
 as [ripgrep](https://github.com/BurntSushi/ripgrep) for the recursive search in
 the directory and in Stdin, and [jq](https://github.com/jqlang/jq) for the
 formatting of ripgrep's result.
