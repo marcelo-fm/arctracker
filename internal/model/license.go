@@ -13,8 +13,8 @@ type License struct {
 
 func LicenseColumns() []table.Column {
 	return []table.Column{
-		{Title: "Título", Width: 25},
-		{Title: "Comando", Width: 20},
+		{Title: "Title", Width: 25},
+		{Title: "Command", Width: 20},
 		{Title: "Basic", Width: 6},
 		{Title: "Standard", Width: 6},
 		{Title: "Advanced", Width: 6},
@@ -24,8 +24,8 @@ func LicenseColumns() []table.Column {
 
 func CSVHeaders() []string {
 	return []string{
-		"Título",
-		"Comando",
+		"Title",
+		"Command",
 		"Basic",
 		"Standard",
 		"Advanced",
