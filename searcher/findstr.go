@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/marcelo-fm/arctracker/internal/model"
+	"github.com/marcelo-fm/arctracker/model"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
@@ -40,9 +40,9 @@ func (r *Findstr) Search() ([]model.Match, error) {
 		if !strings.HasSuffix(filename, ".py") {
 			return nil
 		}
-    log.Debug().Msgf("raw path: %s", path)
-    cleanPath := filepath.Clean(path)
-    log.Debug().Msgf("Searching in path: %s", cleanPath)
+		log.Debug().Msgf("raw path: %s", path)
+		cleanPath := filepath.Clean(path)
+		log.Debug().Msgf("Searching in path: %s", cleanPath)
 		fileMatches, err := searchFile(cleanPath)
 		if err != nil {
 			return err

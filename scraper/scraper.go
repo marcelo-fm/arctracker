@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
-	"github.com/marcelo-fm/arctracker/internal/model"
+	"github.com/marcelo-fm/arctracker/model"
 )
 
 func New(c *colly.Collector) Scraper {
