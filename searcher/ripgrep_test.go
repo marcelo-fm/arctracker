@@ -2,6 +2,8 @@ package searcher
 
 import (
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 func TestNewRipgrep(t *testing.T) {
@@ -18,7 +20,7 @@ func TestRipgrepSearchWithPath(t *testing.T) {
 	if !HasRipgrepDeps() {
 		t.Skip("The OS does not have ripgrep or jq. Skipping...")
 	}
-	path := "../../testdata"
+	path := viper.GetString("testdata")
 	searcher := NewRipgrep(false, path)
 	matches, err := searcher.Search()
 	if err != nil {

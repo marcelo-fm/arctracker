@@ -3,6 +3,8 @@ package searcher
 import (
 	"runtime"
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 func TestNewGrep(t *testing.T) {
@@ -19,7 +21,7 @@ func TestGrepSearchWithPath(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("Invalid OS for testing this function. Skipping...")
 	}
-	path := "../../testdata"
+	path := viper.GetString("testdata")
 	searcher := NewGrep(false, path)
 	matches, err := searcher.Search()
 	if err != nil {

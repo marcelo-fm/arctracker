@@ -9,5 +9,6 @@ import (
 
 func TestMain(m *testing.M) {
 	viper.SetDefault("pattern", "arcpy")
+	viper.SetDefault("testdata", "../testdata/")
 	os.Exit(m.Run())
 }
