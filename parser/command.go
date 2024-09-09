@@ -6,8 +6,8 @@ import (
 )
 
 // parseModule retorna o nome do módulo correto para a URL.
-func parseModule(module string) string {
-	switch module {
+func parseModule(moduleName string) string {
+	switch moduleName {
 	case "management":
 		return "data-management"
 	case "edit":
@@ -33,7 +33,7 @@ func parseModule(module string) string {
 	case "un":
 		return "utility-networks"
 	default:
-		return module
+		return moduleName
 	}
 }
 
