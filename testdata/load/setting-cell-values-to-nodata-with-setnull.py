@@ -1,0 +1,1 @@
+OutRas = SetNull(InRas1 > 5, InRas1)

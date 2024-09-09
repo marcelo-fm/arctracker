@@ -1,0 +1,1 @@
+arcpy.transit.GTFSStopsToFeatures(r"D:/GTFS/stops.txt", r"D:/Data/output.gdb/stops")

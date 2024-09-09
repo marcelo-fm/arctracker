@@ -1,0 +1,1 @@
+arcpy.transit.GTFSShapesToFeatures(r"D:/GTFS/shapes.txt", r"D:/Data/output.gdb/shapes")

@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GenerateThresholdDriveTimeTradeArea("SF_Custs",r"C:\ Project1\Project1.gdb\SF_Custs_GenerateThresholdDriveTimeTradeArea","populationtotals.totpop_cy",[25000, 50000], "Driving Time","MINUTES", "CUST_ID", None,"TOWARD_STORES", None,"TIME_ZONE_AT_LOCATION", None,"STANDARD", 10, None, 5, Values, None)

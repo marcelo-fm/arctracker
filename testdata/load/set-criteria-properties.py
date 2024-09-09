@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.SetCriteriaProperties("Site Suitability001", "wealth_meddi_cy 'Criterion for wealth.meddi_cy variable' 1 # # POSITIVE # true;wealth_mednw_cy 'Criterion for wealth.mednw_cy variable' 1 # # INVERSE # true")

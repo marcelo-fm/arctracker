@@ -1,0 +1,1 @@
+$feature["Distance"] * 2

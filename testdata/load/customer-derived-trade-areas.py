@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.CustomerDerivedTA("Facilities", "ID", "Customers", "ID",r"C:\Temp\Output.gdb\TradeArea75pct","DETAILED_WITH_SMOOTHING", [75], "COUNT", None,"ALL_POINTS", None, "OVERLAP", "USE_STORES", '', '',"TOWARD_STORES", None, "TIME_ZONE_AT_LOCATION", None,"STANDARD", 10, None, 5)

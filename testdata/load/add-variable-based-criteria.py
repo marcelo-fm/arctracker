@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.AddVariableBasedSuitabilityCriteria("Suitability Analysis", r"c:\users\<User ID>\documents\arcgis\projects\myproject\bayarea_proprietarydata.sdcx/sales_s01_sales;c:\users\<User ID>\documents\arcgis\projects\myproject\bayarea_proprietarydata.sdcx/populationtotals_dpopdenscy")

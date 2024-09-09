@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GenerateGridsAndHexagons("LoudonCountyVA", "MyProject.gdb\output", "HEXAGON", "ENRICH_BUFFER", "1 SquareMiles", None, "populationtotals.totpop_cy", "Driving Time", 1, "MINUTES", None, "TOWARD_STORES", None, "TIME_ZONE_AT_LOCATION", None, "STANDARD", None)

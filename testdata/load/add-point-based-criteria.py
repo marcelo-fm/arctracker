@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.AddPointLayerBasedSuitabilityCriteria("Suitability Analysis layer", "OBJECTID", r"Data\Business Data\USA_SHC_2018.gdb\us_shc", "WEIGHT", None, None, None, None, "GLA", "SUM", None)

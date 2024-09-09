@@ -1,0 +1,5 @@
+sinks = Sink(flowdir)
+sink_areas = Watershed(flowdir, sinks)
+sink_min = ZonalStatistics(sink_areas, "Value", elevation, "Minimum")
+sink_max = ZonalFill(sink_areas, elevation)
+sink_depth = Minus(sink_max, sink_min)

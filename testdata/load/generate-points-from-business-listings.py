@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GeneratePointsFromBusinessListings("MyProject.gdb\output", "San Francisco Bay Area", "coffee", False, False, 100, "salesvol min:200 INCLUDE;empnum 'min:3 max:10' INCLUDE;city 'Mountain View' EXCLUDE", False)

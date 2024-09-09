@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GenerateApproximateDriveTimes("SF_TradeArea",r"C:\Project1.gdb\SF_Stores_GenerateApproximateDriveTimes", "Driving Time", "MINUTES",r"C:\Project1.gdb\sf_stores_Geocoded", "INPUT_AREA_ID", "STORES_AREA_ID", 10, None, 5, "TOWARD_STORES", None, "TIME_ZONE_AT_LOCATION", None, "STANDARD")
