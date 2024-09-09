@@ -2,15 +2,25 @@ package scraper
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/gocolly/colly"
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 )
 
 func TestMain(m *testing.M) {
-	status := m.Run()
-	err := os.RemoveAll("./cache")
+	tmpDir, err := os.MkdirTemp("", "")
 	if err != nil {
+		log.Error().Err(err).Msg("Error in creating tempdir")
+		os.Exit(1)
+	}
+	viper.SetDefault("cacheDir", tmpDir)
+	status := m.Run()
+	err = os.RemoveAll(tmpDir)
+	if err != nil {
+		log.Error().Err(err).Msg("Error in deleting tempdir")
 		status = 1
 	}
 	os.Exit(status)
@@ -19,7 +29,7 @@ func TestMain(m *testing.M) {
 func TestNew(t *testing.T) {
 	c := colly.NewCollector(
 		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir("./cache"),
+		colly.CacheDir(viper.GetString("cacheDir")),
 	)
 	s := New(c)
 	if s.c == nil {
@@ -36,7 +46,7 @@ func TestNew(t *testing.T) {
 func TestSetupLicenseScraper(t *testing.T) {
 	c := colly.NewCollector(
 		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir("./cache"),
+		colly.CacheDir(viper.GetString("cacheDir")),
 	)
 	s := New(c)
 	s.SetupLicenseScraper()
@@ -85,5 +95,41 @@ func TestScrape(t *testing.T) {
 
 	if license.URL != url {
 		t.Errorf("Expected license.URL to be %v, got %v", url, license.URL)
+	}
+}
+
+func BenchmarkScrape(b *testing.B) {
+	tmpDir, err := os.MkdirTemp("", "")
+	if err != nil {
+		log.Error().Err(err).Msg("Error in creating tempdir")
+		os.Exit(1)
+	}
+	cacheDir := filepath.Join(tmpDir, "cache")
+	c := colly.NewCollector(
+		colly.AllowedDomains("pro.arcgis.com"),
+		colly.CacheDir(cacheDir),
+	)
+	s := New(c)
+	s.SetupLicenseScraper()
+
+	// Replace with a valid URL from pro.arcgis.com
+	url := "https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/buffer.htm"
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		b.StopTimer()
+		err = os.MkdirAll(cacheDir, os.ModePerm)
+		if err != nil {
+			log.Error().Err(err).Msg("Error in creating cacheDir")
+			continue
+		}
+		b.StartTimer()
+		s.Scrape(url)
+		b.StopTimer()
+		err = os.RemoveAll(tmpDir)
+		if err != nil {
+			log.Error().Err(err).Msg("Error in deleting tempdir")
+			break
+		}
+		b.StartTimer()
 	}
 }
