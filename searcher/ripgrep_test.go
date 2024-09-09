@@ -1,8 +1,10 @@
 package searcher
 
 import (
+	"runtime"
 	"testing"
 
+	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 )
 
@@ -28,5 +30,26 @@ func TestRipgrepSearchWithPath(t *testing.T) {
 	}
 	if len(matches) == 0 {
 		t.Error("Expected matches, but got zero")
+	}
+}
+
+func BenchmarkRipGrepSearch(b *testing.B) {
+	if runtime.GOOS != "linux" {
+		b.Skip("Invalid OS for testing this function. Skipping...")
+	}
+	path := viper.GetString("testdata")
+	searcher := NewRipgrep(false, path)
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	b.ResetTimer()
+	for i := 0; i <= b.N; i++ {
+		matches, err := searcher.Search()
+		b.StopTimer()
+		if err != nil {
+			b.Fatalf("Error in searching in path %s", path)
+		}
+		if len(matches) == 0 {
+			b.Error("Expected matches, but got zero")
+		}
+		b.StartTimer()
 	}
 }
