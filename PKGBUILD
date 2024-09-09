@@ -12,7 +12,7 @@ sha512sums=("SKIP")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/marcelo-fm/arctracker/archive/refs/tags/v$pkgver.tar.gz")
 
 build() {
-	cd "$pkgname-$pkgver" && go build -o arctracker main.go
+	cd "$pkgname-$pkgver" && go build -o arctracker main.go -tags prod
 }
 
 package() {
