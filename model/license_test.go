@@ -5,8 +5,8 @@ import (
 )
 
 var expectedColumns [6]string = [6]string{
-	"Título",
-	"Comando",
+	"Title",
+	"Command",
 	"Basic",
 	"Standard",
 	"Advanced",
@@ -61,4 +61,3 @@ func TestToRow(t *testing.T) {
 		t.Errorf("expected %s, got %s", expectedLicense.URL, row[5])
 	}
 }
-
