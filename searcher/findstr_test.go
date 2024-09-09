@@ -1,9 +1,10 @@
-package searcher
+package searcher_test
 
 import (
 	"runtime"
 	"testing"
 
+	"github.com/marcelo-fm/arctracker/searcher"
 	"github.com/spf13/viper"
 )
 
@@ -11,7 +12,7 @@ func TestNewFindstr(t *testing.T) {
 	if runtime.GOOS != "windows" {
 		t.Skip("Invalid OS for testing this function. Skipping...")
 	}
-	searcher := NewFindstr(true, "")
+	searcher := searcher.NewFindstr(true, "")
 	if searcher == nil {
 		t.Fatal("Expected Ripgrep struct, got nil.")
 	}
@@ -22,7 +23,7 @@ func TestFindstrSearchWithPath(t *testing.T) {
 		t.Skip("Invalid OS for testing this function. Skipping...")
 	}
 	path := viper.GetString("testdata")
-	searcher := NewFindstr(false, path)
+	searcher := searcher.NewFindstr(false, path)
 	matches, err := searcher.Search()
 	if err != nil {
 		t.Fatalf("Error in searching in path %s", path)

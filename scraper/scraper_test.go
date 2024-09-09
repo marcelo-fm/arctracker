@@ -1,4 +1,4 @@
-package scraper
+package scraper_test
 
 import (
 	"os"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/gocolly/colly"
+	"github.com/marcelo-fm/arctracker/scraper"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
@@ -26,46 +27,12 @@ func TestMain(m *testing.M) {
 	os.Exit(status)
 }
 
-func TestNew(t *testing.T) {
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(viper.GetString("cacheDir")),
-	)
-	s := New(c)
-	if s.c == nil {
-		t.Error("collector is nil, expected a Collector")
-	}
-	if s.l == nil {
-		t.Error("license is nil, expected a empty License model")
-	}
-	if s.l.Name != "" || s.l.Title != "" {
-		t.Error("expected an empty License")
-	}
-}
-
-func TestSetupLicenseScraper(t *testing.T) {
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(viper.GetString("cacheDir")),
-	)
-	s := New(c)
-	s.SetupLicenseScraper()
-
-	if s.c == nil {
-		t.Error("Expected s.c not to be nil")
-	}
-
-	if s.l == nil {
-		t.Error("Expected s.l not to be nil")
-	}
-}
-
 func TestScrape(t *testing.T) {
 	c := colly.NewCollector(
 		colly.AllowedDomains("pro.arcgis.com"),
 		colly.CacheDir("./cache"),
 	)
-	s := New(c)
+	s := scraper.New(c)
 	s.SetupLicenseScraper()
 
 	// Replace with a valid URL from pro.arcgis.com
@@ -109,7 +76,7 @@ func BenchmarkScrape(b *testing.B) {
 		colly.AllowedDomains("pro.arcgis.com"),
 		colly.CacheDir(cacheDir),
 	)
-	s := New(c)
+	s := scraper.New(c)
 	s.SetupLicenseScraper()
 
 	// Replace with a valid URL from pro.arcgis.com
