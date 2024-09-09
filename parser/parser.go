@@ -1,10 +1,8 @@
 package parser
 
 import (
-	"context"
 	"fmt"
 	"strings"
-	"sync"
 
 	"github.com/marcelo-fm/arctracker/model"
 	"github.com/marcelo-fm/arctracker/scraper"
@@ -25,54 +23,7 @@ type Searcher interface {
 // Parser recebe um Searcher e um Scraper, e retorna uma lista com as licenças, ou nil
 // se não houver nenhuma
 func Parse(searcher Searcher, s *scraper.Scraper) ([]model.License, error) {
-	log.Info().Msg("Searching for arcpy commands...")
-	contentArr, err := searcher.Search()
-	if err != nil {
-		return nil, err
-	}
-	log.Info().Msg("Done")
-	log.Info().Msg("Parsing arcpy commands...")
-	baseURL := viper.GetString("baseURL")
-	licenses := make([]model.License, 0, len(contentArr))
-	for _, content := range contentArr {
-		cmd := parseCommand(content)
-		if cmd == "" {
-			continue
-		}
-		url := createURL(cmd)
-		if url == "" {
-			continue
-		}
-		s.SetupLicenseScraper()
-		log.Info().Msg("Done")
-		log.Info().Msg("Scraping license information...")
-		defer log.Info().Msg("Done")
-		license := s.Scrape(baseURL + url)
-		if license.Title != "" && license.Name != "" {
-			licenses = append(licenses, license)
-		}
-	}
-	if licenses == nil {
-		return nil, nil
-	}
-	return licenses, nil
-}
-
-// genContent gera o chanel de bytes, que representa cada achado da palavra chave com
-// regex.
-func genContent(ctx context.Context, in []model.Match) <-chan model.Match {
-	out := make(chan model.Match)
-	go func() {
-		defer close(out)
-		for _, content := range in {
-			select {
-			case out <- content:
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-	return out
+	return nil, nil
 }
 
 func parseCommand(match model.Match) string {
@@ -92,22 +43,6 @@ func parseCommand(match model.Match) string {
 	}
 	log.Debug().Msgf("endIndex: %d", endIndex)
 	return fullCmd[startIndex:endIndex]
-}
-
-func parseCommandChannel(ctx context.Context, in <-chan model.Match) <-chan string {
-	out := make(chan string)
-	go func() {
-		defer close(out)
-		for match := range in {
-			cmd := parseCommand(match)
-			select {
-			case out <- cmd:
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-	return out
 }
 
 func createURL(cmd string) string {
@@ -134,68 +69,4 @@ func createURL(cmd string) string {
 		}
 	}
 	return url + ".htm"
-}
-
-func createURLChannel(ctx context.Context, in <-chan string) <-chan string {
-	out := make(chan string)
-	go func() {
-		defer close(out)
-		for cmd := range in {
-			url := createURL(cmd)
-			if url == "" {
-				continue
-			}
-			select {
-			case out <- url:
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-	return out
-}
-
-func getLicense(ctx context.Context, s *scraper.Scraper, urls <-chan string) <-chan model.License {
-	out := make(chan model.License)
-	go func() {
-		for url := range urls {
-			license := s.Scrape(url)
-			select {
-			case out <- license:
-			case <-ctx.Done():
-				return
-			}
-		}
-	}()
-	return out
-}
-
-func MergeErrors(cs ...<-chan error) <-chan error {
-	var wg sync.WaitGroup
-	out := make(chan error, len(cs))
-	output := func(c <-chan error) {
-		for n := range c {
-			out <- n
-		}
-		wg.Done()
-	}
-	wg.Add(len(cs))
-	for _, c := range cs {
-		go output(c)
-	}
-	go func() {
-		wg.Wait()
-		close(out)
-	}()
-	return out
-}
-
-func WaitForPipeline(errs ...<-chan error) error {
-	errc := MergeErrors(errs...)
-	for err := range errc {
-		if err != nil {
-			return err
-		}
-	}
-	return nil
 }
