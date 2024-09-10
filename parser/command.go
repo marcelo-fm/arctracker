@@ -20,12 +20,20 @@ func parseModule(moduleName string) string {
 		return "multidimension"
 	case "nd":
 		return "network-diagram"
+	case "na":
+		return "network-analyst"
+	case "stpm":
+		return "space-time-pattern-mining"
 	case "oi":
 		return "oriented-imagery"
 	case "transit":
 		return "public-transit"
 	case "rm":
 		return "reality-mapping"
+	case "ra":
+		return "raster-analysis"
+	case "agolservices":
+		return "ready-to-use"
 	case "stats":
 		return "spatial-statistics"
 	case "tn":
