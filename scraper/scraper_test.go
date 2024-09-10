@@ -6,38 +6,41 @@ import (
 	"testing"
 
 	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/scraper"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
 func TestMain(m *testing.M) {
-	tmpDir, err := os.MkdirTemp("", "")
+	configDir, err := os.UserConfigDir()
+	appConfigDir := filepath.Join(configDir, "arctracker")
+	viper.SetDefault("appConfigDir", appConfigDir)
+	err = os.MkdirAll(appConfigDir, 0755)
+	cacheDir := filepath.Join(appConfigDir, "cache")
+	err = os.MkdirAll(cacheDir, 0755)
 	if err != nil {
-		log.Error().Err(err).Msg("Error in creating tempdir")
-		os.Exit(1)
+		log.Error().Err(err).Msg("Error creating cache directory.")
 	}
-	viper.SetDefault("cacheDir", tmpDir)
-	status := m.Run()
-	err = os.RemoveAll(tmpDir)
-	if err != nil {
-		log.Error().Err(err).Msg("Error in deleting tempdir")
-		status = 1
-	}
-	os.Exit(status)
+	viper.SetDefault("cacheDir", cacheDir)
+	os.Exit(m.Run())
 }
 
 func TestScrape(t *testing.T) {
 	c := colly.NewCollector(
 		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir("./cache"),
+		colly.CacheDir(viper.GetString("cacheDir")),
 	)
+	extensions.RandomUserAgent(c)
 	s := scraper.New(c)
 	s.SetupLicenseScraper()
 
 	// Replace with a valid URL from pro.arcgis.com
 	url := "https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/buffer.htm"
-	license := s.Scrape(url)
+	license, err := s.Scrape(url)
+	if err != nil {
+		t.Fatalf("Error in scraping data: %v", err)
+	}
 
 	// Replace with expected values
 	if license.Title != "Buffer (Analysis)" {
@@ -66,16 +69,12 @@ func TestScrape(t *testing.T) {
 }
 
 func BenchmarkScrape(b *testing.B) {
-	tmpDir, err := os.MkdirTemp("", "")
-	if err != nil {
-		log.Error().Err(err).Msg("Error in creating tempdir")
-		os.Exit(1)
-	}
-	cacheDir := filepath.Join(tmpDir, "cache")
+	cacheDir := viper.GetString("cacheDir")
 	c := colly.NewCollector(
 		colly.AllowedDomains("pro.arcgis.com"),
 		colly.CacheDir(cacheDir),
 	)
+	extensions.RandomUserAgent(c)
 	s := scraper.New(c)
 	s.SetupLicenseScraper()
 
@@ -83,20 +82,6 @@ func BenchmarkScrape(b *testing.B) {
 	url := "https://pro.arcgis.com/en/pro-app/latest/tool-reference/analysis/buffer.htm"
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		b.StopTimer()
-		err = os.MkdirAll(cacheDir, os.ModePerm)
-		if err != nil {
-			log.Error().Err(err).Msg("Error in creating cacheDir")
-			continue
-		}
-		b.StartTimer()
 		s.Scrape(url)
-		b.StopTimer()
-		err = os.RemoveAll(tmpDir)
-		if err != nil {
-			log.Error().Err(err).Msg("Error in deleting tempdir")
-			break
-		}
-		b.StartTimer()
 	}
 }
