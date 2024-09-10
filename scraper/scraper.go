@@ -5,6 +5,7 @@ import (
 
 	"github.com/gocolly/colly"
 	"github.com/marcelo-fm/arctracker/model"
+	"github.com/rs/zerolog/log"
 )
 
 func New(c *colly.Collector) Scraper {
@@ -41,10 +42,24 @@ func (s *Scraper) SetupLicenseScraper() {
 		})
 		s.l.URL = e.Request.AbsoluteURL("")
 	})
+	s.c.OnError(func(r *colly.Response, err error) {
+		if err.Error() != "Not Found" {
+			log.Error().Err(err).Str("url", r.Request.URL.String()).Msg("Error visiting URL")
+		}
+	})
+	s.c.OnResponse(func(r *colly.Response) {
+		log.Debug().Str("url", r.Request.URL.String()).Msg("Visited URL")
+	})
 }
 
-func (s *Scraper) Scrape(url string) model.License {
-	s.c.Visit(url)
+func (s *Scraper) Scrape(url string) (model.License, error) {
+	log.Debug().Msgf("Visiting %s", url)
+	err := s.c.Visit(url)
+	if err != nil {
+		if err.Error() == "Not Found" {
+			err = nil
+		}
+	}
 	defer func() { s.l = &model.License{} }()
-	return *s.l
+	return *s.l, err
 }
