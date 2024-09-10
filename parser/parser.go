@@ -23,12 +23,11 @@ type Searcher interface {
 // Parser recebe um Searcher e um Scraper, e retorna uma lista com as licenças, ou nil
 // se não houver nenhuma
 func Parse(searcher Searcher, s *scraper.Scraper) ([]model.License, error) {
-	return nil, nil
+	return sequentialParse(searcher, s)
 }
 
 func parseCommand(match model.Match) string {
 	fullCmd := strings.Trim(match.Text, " ")
-	log.Debug().Msgf("Cmd of %s: %s", match.Text, fullCmd)
 	startIndex := strings.Index(fullCmd, "arcpy.")
 	if startIndex == -1 {
 		return ""
@@ -48,25 +47,34 @@ func parseCommand(match model.Match) string {
 func createURL(cmd string) string {
 	pattern := viper.GetString("pattern")
 	if !strings.HasPrefix(cmd, pattern+".") {
-		log.Warn().Msgf("%s does not start with arcpy.", cmd)
+		log.Debug().Msgf("%s does not start with arcpy.", cmd)
 		return ""
 	}
 	cmdArr := strings.Split(cmd, ".")
 	lastIndex := len(cmdArr) - 1
 	tool := parseTool(cmdArr[lastIndex])
+	if tool == "" {
+		return ""
+	}
 	var url string
-	if len(cmdArr) == 3 {
+	switch len(cmdArr) {
+	case 3:
 		module := parseModule(cmdArr[1])
 		url = fmt.Sprintf("%s/%s", module, strings.ToLower(tool))
-	} else if len(cmdArr) == 2 {
+		return url + ".htm"
+	case 2:
 		if strings.Contains(cmdArr[1], "_") {
 			cmd := strings.Split(cmdArr[1], "_")
 			tool := parseTool(cmd[0])
+			if tool == "" {
+				return ""
+			}
 			module := parseModule(cmd[1])
 			url = fmt.Sprintf("%s/%s", module, strings.ToLower(tool))
-		} else {
-			url = strings.ToLower(tool)
+			return url + ".htm"
 		}
+		fallthrough
+	default:
+		return ""
 	}
-	return url + ".htm"
 }
