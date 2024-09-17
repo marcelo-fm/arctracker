@@ -8,8 +8,8 @@ import (
 
 	"github.com/gocolly/colly"
 	"github.com/gocolly/colly/extensions"
-	"github.com/marcelo-fm/arctracker/scraper"
-	"github.com/marcelo-fm/arctracker/searcher"
+	"github.com/marcelo-fm/arctracker/internal/scraper"
+	"github.com/marcelo-fm/arctracker/internal/searcher"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"

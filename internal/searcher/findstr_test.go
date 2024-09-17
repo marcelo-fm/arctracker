@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/marcelo-fm/arctracker/searcher"
+	"github.com/marcelo-fm/arctracker/internal/searcher"
 	"github.com/spf13/viper"
 )
 

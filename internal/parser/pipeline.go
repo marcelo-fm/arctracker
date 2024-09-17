@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/marcelo-fm/arctracker/model"
+	"github.com/marcelo-fm/arctracker/internal/model"
 )
 
 // genContent gera o chanel de bytes, que representa cada achado da palavra chave com

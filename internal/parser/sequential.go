@@ -3,8 +3,8 @@ package parser
 import (
 	"strings"
 
-	"github.com/marcelo-fm/arctracker/model"
-	"github.com/marcelo-fm/arctracker/scraper"
+	"github.com/marcelo-fm/arctracker/internal/model"
+	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
