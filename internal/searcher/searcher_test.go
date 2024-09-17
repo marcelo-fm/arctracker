@@ -10,7 +10,7 @@ import (
 
 func TestMain(m *testing.M) {
 	viper.SetDefault("pattern", "arcpy")
-	viper.SetDefault("testdata", "../testdata/standard/")
+	viper.SetDefault("testdata", "../../testdata/standard/")
 	viper.SetDefault("loglevel", zerolog.WarnLevel)
 	viper.AutomaticEnv()
 	os.Exit(m.Run())

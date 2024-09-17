@@ -35,7 +35,7 @@ func setupSearcher(tb testing.TB, load bool) Searcher {
 	if load {
 		folder = "load"
 	}
-	testdataFolder := filepath.Join("../testdata/", folder)
+	testdataFolder := filepath.Join("../../testdata/", folder)
 	switch runtime.GOOS {
 	case "linux":
 		return searcher.NewDefaultLinuxSearcher(false, testdataFolder)
