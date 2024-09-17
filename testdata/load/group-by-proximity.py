@@ -1,17 +1,15 @@
 # Name: GroupByProximity.py
 # Description: Group roads together that touch
 #
-# Requirements: ArcGIS GeoAnalytics Server
+# Requirements: An advanced license
 
 # Import system modules
 import arcpy
 
 # Set local variables
-inFeatures = "https://myGeoAnalyticsMachine.domain.com/geoanalytics/rest/services/DataStoreCatalogs/bigDataFileShares_cityData/BigDataCatalogServer/roads"
-outFS = "groupedRoads"
+inFeatures = "C:\myData\cities.gdb\roads"
+outname = "groupedRoads"
 overlayType = "TOUCHES"
-dataStore = "SPATIOTEMPORAL_DATA_STORE"
 
 # Run Group By Proximity
-result = arcpy.geoanalytics.GroupByProximity(inFeatures, outFS, 
-                                 overlayType, data_store=dataStore)
+result = arcpy.gapro.GroupByProximity(inFeatures, outname, overlayType)

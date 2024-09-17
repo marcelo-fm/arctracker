@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GenerateSurveyReportForTargets(r"C:\Users\MyProject\customerprofile.sgprofile", r"C:\Users\MyProject\TargetGroup.sgtargetgroup", "Core", "Developmental", r"C:\Users\MyProject\Reports_Output", "CUSTOM", "'Automobiles and Automotive Products';'Baby Products, Toys and Games';'Civic Activities and Political Affiliation'", Survey Target Report", "PDF")

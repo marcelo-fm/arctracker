@@ -1,11 +1,12 @@
-# Name: Cutfill_3d_Ex_02.py
+# Name: Cutfill_Ex_02.py
 # Description: Calculates the volume and area of cut and 
 #              fill locations.
-# Requirements: 3D Analyst Extension
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
 env.workspace = "C:/sapyexamples/data"
@@ -13,8 +14,10 @@ env.workspace = "C:/sapyexamples/data"
 # Set local variables
 inBeforeRaster = "elevation01"
 inAfterRaster =  "elevation02"
-outRaster = "C:/output/outcutfill02"
 zFactor = 0.5
 
 # Execute CutFill
-arcpy.ddd.CutFill(inBeforeRaster, inAfterRaster, outRaster, zFactor)
+outCutFill = CutFill(inBeforeRaster, inAfterRaster, zFactor)
+
+# Save the output 
+outCutFill.save("C:/sapyexamples/output/outcutfill02")

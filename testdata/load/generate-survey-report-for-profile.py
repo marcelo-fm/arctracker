@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GenerateSurveyReportForProfile(r"C:\Users\MyProject\customerprofile.sgprofile", r"C:\Users\MyProject\MarketAreaprofile.sgprofile", "Automobiles and Automotive Products", r"C:\Users\MyProject\Reports_Output", "EXPECTED_NUMBER", "DESCENDING", "Auto Survey Profile Report", "PDF")

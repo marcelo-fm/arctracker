@@ -1,19 +1,16 @@
 # Import system modules
 import arcpy
-from arcpy.ia import *
-
-# Check out the ArcGIS Image Analyst extension license
-arcpy.CheckOutExtension("ImageAnalyst")
+from arcpy.sa import *
 
 
-# Define input parameters
-in_changeAnalysisRaster = "c:/test/LandsatCCDC.crf"
-in_definition = "c:/output/change_detection.ecd"
-in_additional_raster = ''
+# Set local variables
+insegras = "c:/classifydata/moncton_seg.tif"
+indef_file = "c:/classifydata/moncton_sig.ecd"
+in_additional_raster = "c:/classifydata/moncton.tif"
+
 
 # Execute 
-classifiedraster = arcpy.ia.ClassifyRaster(
-	in_changeAnalysisRaster, indef_file, in_additional_raster)
+classifiedraster = ClassifyRaster(insegras, indef_file, in_additional_raster)
 
 #save output
-classifiedraster.save("c:/test/time_series_class.crf")
+classifiedraster.save("c:/test/moncton_classified.tif")

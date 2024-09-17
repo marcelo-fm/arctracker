@@ -1,20 +1,20 @@
-# Name: Viewshed_3d_Ex_02.py
-# Description: Determines the raster surface locations visible 
-#              to a set of observer features.
-# Requirements: 3D Analyst Extension
+# Name: Visibility_Ex_02.py
+# Description: Determines the raster surface locations visible to a set of
+#                     observer features.
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "c:/data"
+env.workspace = "c:/sapyexamples/data"
 
 # set local variables
 inRaster = "elevation"
 inObserverFeatures = "observers.shp"
-outRaster = "c:/output/visiout1"
-aglOutput = "c:/output/aglout1"
+aglOutput = "c:/sapyexamples/output/aglout1"
 analysisType = "OBSERVERS"
 nonVisibleValue = "ZERO"
 zFactor = 1
@@ -31,8 +31,11 @@ vertUpperAngle = 5
 vertLowerAngle = -5
 
 # Execute Visibility
-arcpy.ddd.Visibility(inRaster, inObserverFeatures, outRaster, algOutput,
-                     analysisType, nonVisibleValue, zFactor, useEarthCurvature,
-                     refractivityCoefficient, surfaceOffset, observerElevation,
-                     observerOffset, innerRadius, outerRadius, horizStartAngle,
-                     horizEndAngle, vertUpperAngle, vertLowerAngle)
+outvis = arcpy.sa.Visibility(inRaster, inObserverFeatures, algOutput, analysisType,
+                            nonVisibleValue, zFactor, useEarthCurvature,
+                            refractivityCoefficient, surfaceOffset, observerElevation,
+                            observerOffset, innerRadius, outerRadius, horizStartAngle,
+                            horizEndAngle, vertUpperAngle, vertLowerAngle)
+
+# Save the output
+outvis.save("c:/sapyexamples/output/visiout1")

@@ -1,33 +1,25 @@
-# Name: InverseDistanceWeighting_Example_02.py
-# Description: Interpolate a series of point features onto a rectangular raster
-#              using Inverse Distance Weighting (IDW).
-# Requirements: Geostatistical Analyst Extension
+# Name: IDW_Ex_02.py
+# Description: Interpolate a series of point features onto a rectangular 
+#   raster using Inverse Distance Weighting (IDW).
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
+from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-arcpy.env.workspace = "C:/gapyexamples/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inPointFeatures = "ca_ozone_pts.shp"
-zField = "OZONE"
-outLayer = "outIDW"
-outRaster = "C:/gapyexamples/output/idwout"
+zField = "ozone"
 cellSize = 2000.0
 power = 2
-
-# Set variables for search neighborhood
-majSemiaxis = 300000
-minSemiaxis = 300000
-angle = 0
-maxNeighbors = 15
-minNeighbors = 10
-sectorType = "ONE_SECTOR"
-searchNeighbourhood = arcpy.SearchNeighborhoodStandard(majSemiaxis, minSemiaxis,
-                                                       angle, maxNeighbors,
-                                                       minNeighbors, sectorType)
+searchRadius = RadiusVariable(10, 150000)
 
 # Execute IDW
-arcpy.IDW_ga(inPointFeatures, zField, outLayer, outRaster, cellSize, 
-             power, searchNeighbourhood)
+outIDW = Idw(inPointFeatures, zField, cellSize, power, searchRadius)
+
+# Save the output 
+outIDW.save("C:/sapyexamples/output/idwout02")

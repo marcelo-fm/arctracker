@@ -1,23 +1,26 @@
-# Name: SplineWithBarriers_3d_Ex_02.py
+# Name: SplineWithBarriers_Ex_02.py
 # Description: Interpolate a series of point features onto a
 #    rectangular raster, using optional barriers, using a
 #    minimum curvature spline technique.
-# Requirements: 3D Analyst Extension.
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inPointFeatures = "ca_ozone_pts.shp"
 zField = "ozone"
 inBarrierFeature = "ca_ozone_barrier.shp"
 cellSize = 2000.0
-outRaster = "C:/output/splinebout"
 
 # Execute Spline with Barriers
-arcpy.ddd.SplineWithBarriers(inPntFeat, zField, inBarrierFeature,
-                             cellSize, outRaster)
+outSplineBarriers = SplineWithBarriers(inPointFeatures,
+                          zField, inBarrierFeature, cellSize)
+
+# Save the output
+outSplineBarriers.save("C:/sapyexamples/output/splinebout02")

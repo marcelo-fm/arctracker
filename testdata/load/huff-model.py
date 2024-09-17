@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.HuffModel("starbucks_layer", "IDField", "potential_store_layer", "IDField", "HuffModelTestData.gdb\CT", "IDField", "TOTPOP_CY", "Starbucks_HuffModel", "SALES # 1", -1.5, "STRAIGHT_LINE_DISTANCE", "MILES", None, "TOWARD_STORES", None, "TIME_ZONE_AT_LOCATION")
