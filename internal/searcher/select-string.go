@@ -29,14 +29,14 @@ func (r *SelectString) Search() ([]model.Match, error) {
 	var err error
 	pattern := viper.GetString("pattern")
 	path := r.path
-	argsCmd1 := []string{"-Command", "Get-ChildItem", "-Path", path, "-Recurse", "|", "Select-String", "-Pattern", pattern, "-Encoding", "UTF8"}
+	argsCmd1 := []string{"-WindowStyle", "Hidden", "-Command", "Get-ChildItem", "-Path", path, "-Recurse", "|", "Select-String", "-Pattern", pattern, "-Encoding", "UTF8"}
 	log.Debug().Msgf("Searching for pattern %s in %s", pattern, path)
-	cmd1 := exec.Command("powershell", argsCmd1...)
-	log.Debug().Msgf("Command 1: %s", strings.Join(cmd1.Args, " "))
+	cmd := exec.Command("powershell", argsCmd1...)
+	log.Debug().Msgf("Command 1: %s", strings.Join(cmd.Args, " "))
 	buf := new(bytes.Buffer)
 	writer := bytes.NewBuffer(buf.Bytes())
-	cmd1.Stdout = writer
-	err = cmd1.Run()
+	cmd.Stdout = writer
+	err = cmd.Run()
 	if err != nil {
 		log.Error().Err(err).Msg("Error running command 1")
 		return nil, err
