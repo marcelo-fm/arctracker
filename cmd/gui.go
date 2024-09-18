@@ -1,6 +1,3 @@
-//go:build !gui
-// +build !gui
-
 /*
 Copyright © 2024 MARCELO MESQUITA
 
