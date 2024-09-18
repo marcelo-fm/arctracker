@@ -25,4 +25,6 @@ go.work.sum
 .env
 cache/
 bin/*
-
+fyne-cross/
+tmp/*
+arctracker*
