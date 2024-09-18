@@ -1,26 +1,22 @@
+#-------------------------------------------------------------------------------
 # Name: OptimalRegionConnections_Ex_02.py
-# Description: Calculates the optimal network of connections for the sources.
-#
-# Requirements: Spatial Analyst Extension
+# Description: Calculates the optimal connections between regions.
+# Requirements: ArcGIS Image Server
 
 # Import system modules
 import arcpy
-from arcpy import env
-from arcpy.sa import *
-
-# Set environment settings
-env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
-inSourceData = "sources.shp"
-inBarrier = "barriers.tif"
-inCostRaster = "cost_surface.tif"
+inputRegionsLayer =
+    'https://MyPortal.esri.com/server/rest/services/Hosted/regions/ImageServer'
+outputName = 'outOptimalConnections'
+inputBarriersLayer =
+    'https://MyPortal.esri.com/server/rest/services/Hosted/barriers/ImageServer'
+inputCostLayer = 
+    'https://MyPortal.esri.com/server/rest/services/Hosted/cost/ImageServer'
+outputName02 = 'outNeighborConnections'
+distanceMethod = 'GEODESIC'
+connectionsWithinRegions = 'GENERATE_CONNECTIONS' 
 
-# Check out the ArcGIS Spatial Analyst extension license
-arcpy.CheckOutExtension("Spatial")
-
-# Execute the tool
-outOptRegConnect = OptimalRegionConnections(inSourceData, inBarrier, inCostRaster)
-
-# Save the output 
-outOptRegConnect.save("C:/sapyexamples/output/optregconnect.tif")
+arcpy.ra.OptimalRegionConnections(inputRegionsLayer, outputName, inputBarriersLayer,
+                                  inputCostLayer, outputName02, distanceMethod,connectionsWithinRegions)

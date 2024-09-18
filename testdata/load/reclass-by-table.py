@@ -1,19 +1,21 @@
-# Name: ReclassByTable_Ex_02.py
+# Name: reclassbytable_example02.py
 # Description: Reclassifies the values of the input raster using a remap table.
-# Requirements: 3D Analyst Extension
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inRaster = "slope"
 inRemapTable = "remapslope"
-outRaster = "C:/output/recslope"
 
 # Execute Reclassify
-arcpy.ddd.ReclassByTable(inRaster, inRemapTable, outRaster, "FROM","TO","OUT",
-                        "NODATA")
+outRaster = ReclassByTable(inRaster, inRemapTable,"FROM","TO","OUT","NODATA")
+
+# Save the output 
+outRaster.save("C:/sapyexamples/output/recslope")

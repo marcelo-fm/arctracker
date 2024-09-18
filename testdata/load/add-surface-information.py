@@ -1,35 +1,24 @@
-'''*********************************************************************
-Name: AddSurfaceInformation Example
-Description: This script demonstrates how to use AddSurfaceInformation 
-             on all 2D feature classes in a target workspace.
-*********************************************************************'''
+# Name: AddSurfaceInformation_Ex_02.py
+# Description: This script demonstrates how to use AddSurfaceInformation 
+# on a 2D point feature class in a target workspace.
+# Requirements: Spatial Analyst Extension
+
 # Import system modules
 import arcpy
+from arcpy.sa import *
 
-# Set Local Variables
-arcpy.env.workspace = 'c:/data'
-inSurface = 'fgdb.gdb/municipal/terrain'
+# Check out the ArcGIS Spatial Analyst extension license
+arcpy.CheckOutExtension("Spatial")
+
+# Set the analysis environments
+arcpy.env.workspace = "C:/arcpyExamples/data"
+
+# Set the local variables
+inFeatureClass = "point.shp"
+inSurface = "dtm_tin"
+Prop = "Z"
+method = "LINEAR"
 pyramid = 5
-method = "BILINEAR"
 
-# Create list of feature classes
-fcList = arcpy.ListFeatureClasses()
-
-if fcList:
-    for fc in fcList:
-        desc = arcpy.Describe(fc)
-        # Determine if the feature is 2D
-        if not desc.hasZ:
-            if desc.shapeType == "Polygon":
-                # Desired properties separated by semi-colons
-                Prop = "Z_MIN;Z_MAX" 
-            elif desc.shapeType == "Point":
-                Prop = "Z"
-            elif desc.shapeType == "Multipoint":
-                Prop = "Z_MIN;Z_MAX;Z_MEAN"
-            elif desc.shapeType == "Polyline":
-                Prop = "LENGTH_3D"
-            # Execute AddSurfaceInformation
-            arcpy.ddd.AddSurfaceInformation(fc, inSurface, Prop, 
-                                            method, 15, 1, pyramid)
-            print("Completed adding surface information.")
+# Execute the tool
+AddSurfaceInformation(inFeatureClass, inSurface, Prop, method, 15, 1, pyramid)

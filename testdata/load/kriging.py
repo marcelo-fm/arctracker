@@ -1,23 +1,35 @@
-# Name: Kriging_3d_Ex_02.py
+# Name: Kriging_Ex_02.py
 # Description: Interpolates a surface from points using kriging.
-# Requirements: 3D Analyst Extension
+# Requirements: Spatial Analyst Extension
 # Import system modules
 
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inFeatures = "ca_ozone_pts.shp"
 field = "OZONE"
-outRaster = "C:/output/krigoutput02"
 cellSize = 2000
-outVarRaster = "C:/output/outvariance"
-kModel = "CIRCULAR"
-kRadius = 20000
+outVarRaster = "C:/sapyexamples/output/outvariance"
+lagSize = 2000
+majorRange = 2.6
+partialSill = 542
+nugget = 0
+
+# Set complex variables
+kModelOrdinary = KrigingModelOrdinary("CIRCULAR", lagSize,
+                                majorRange, partialSill, nugget)
+kRadius = RadiusFixed(20000, 1)
+
+
 
 # Execute Kriging
-arcpy.ddd.Kriging(inFeatures, field, outRaster, kModel, 
-                 cellSize, kRadius, outVarRaster)
+outKriging = Kriging(inFeatures, field, kModelOrdinary, cellSize,
+                     kRadius, outVarRaster)
+
+# Save the output 
+outKriging.save("C:/sapyexamples/output/krigoutput02")

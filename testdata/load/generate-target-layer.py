@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.GenerateTargetLayer("US.ZIP5","Total Adult Population", r"C:\Users\MyProject\MyProject.gdb\GenerateTargetLayer_PACIFICHEIGHTS", "SELECT_SEGMENTS", None, '', "2C", "proposed_site")

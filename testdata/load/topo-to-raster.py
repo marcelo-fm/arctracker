@@ -1,21 +1,29 @@
-# Name: TopoToRaster_3D_Ex_02.py
+# Name: TopoToRaster_Ex_02.py
 # Description: Interpolates a hydrologically correct surface 
-#              from point, line, and polygon data.
-# Requirements: 3D Analyst Extension
+#    from point, line, and polygon data.
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
 env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
-inPointElevations = "C:/data/spots.shp spot_meters PointElevation"
-inContours = "C:/data/contours.shp spot_meters Contour"
-inFeatures = (inPointElevations + ";" + inContours)
-outRaster = "C:/output/topoout"
+inPointElevations = TopoPointElevation([['spots.shp', 'spot_meter'], 
+                                        ['spots2.shp', 'elev']])
+inBoundary = TopoBoundary(['boundary.shp'])
+inContours = TopoContour([['contours.shp', 'spot_meter']])
+inLake = TopoLake(['lakes.shp'])
+inSinks = TopoSink([['sink1.shp', 'elevation'], ['sink2.shp', 'none']])
+inStream = TopoStream(['streams.shp'])
 
+inFeatures = ([inPointElevations, inContours, inLake, inBoundary, inSinks])
 
 # Execute TopoToRaster
-arcpy.ddd.TopoToRaster(inFeatures, outRaster)
+outTTR = TopoToRaster(inFeatures)
+
+# Save the output 
+outTTR.save("C:/sapyexamples/output/ttrout03")

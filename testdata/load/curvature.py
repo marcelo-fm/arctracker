@@ -1,19 +1,22 @@
-# Name: Curvature_3d_Ex_02.py
+# Name: Curvature_Ex_02.py
 # Description: Calculates the curvature of a raster surface, 
 #              optionally including profile and plan curvature.
-# Requirements: 3D Analyst Extension
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inRaster = "elevation"
-outRaster = "C:/output/outcurv02"
 zFactor = 1.094
 
 # Execute Curvature
-arcpy.ddd.Curvature(inRaster, outRaster, 1.094)
+outCurve = Curvature(inRaster, 1.094)
+
+# Save the output 
+outCurve.save("C:/sapyexamples/output/outcurv02")

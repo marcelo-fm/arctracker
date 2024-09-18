@@ -1,14 +1,14 @@
 # Name: CellStatistics_Ex_standalone.py
 # Description: Calculates a per-cell statistic from multiple multiband rasters
 #               and process as multiband.
-# Requirements: Image Analyst Extension
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
-from arcpy.ia import *
+from arcpy.sa import *
 
-# Check out the ArcGIS Image Analyst extension license
-arcpy.CheckOutExtension("ImageAnalyst")
+# Check out the ArcGIS Spatial Analyst extension license
+arcpy.CheckOutExtension("Spatial")
 
 # Set the analysis environments
 arcpy.env.workspace = "C:/sapyexamples/data"

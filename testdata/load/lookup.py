@@ -1,19 +1,22 @@
-# Name: Lookup_3d_Ex_02.py
+# Name: lookup_example02.py
 # Description: Creates a new raster by looking up values found in another 
-#     field in the table of the input raster.
-# Requirements: 3D Analyst Extension
+#              field in the table of the input raster.
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inRaster = "mycity"
 lookupField = "land_code"
-outRaster = "C:/output/mylandcode"
 
 # Execute Lookup
-arcpy.ddd.Lookup(inRaster, lookupField, outRaster)
+outRaster = Lookup(inRaster, lookupField)
+
+# Save the output 
+outRaster.save("C:/sapyexamples/output/mylandcode")

@@ -1,13 +1,14 @@
-# Name: Contour_3d_Ex_02.py
+# Name: Contour_Ex_02.py
 # Description: Creates contours or isolines from a raster surface.
-# Requirements: 3D Analyst Extension
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
 # Set local variables
 inRaster = "elevation"
@@ -16,4 +17,4 @@ baseContour = 0
 outContours = "C:/sapyexamples/output/outcontours02.shp"
 
 # Execute Contour
-arcpy.ddd.Contour(inRaster, outContours, contourInterval, baseContour)
+Contour(inRaster, outContours, contourInterval, baseContour)

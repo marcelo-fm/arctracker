@@ -1,0 +1,2 @@
+import arcpy
+arcpy.ba.AnalyzeMarketAreaGap("cust_layer", r"C:\Users\MyProject\customerprofile.sgprofile", r"C:\Users\MyProject\MarketAreaprofile.sgprofile", "US.ZIP5", r"C:\Users\MyProject\MyProject.gdb\MarketPotential","target group", "core target", "dev target", r"C:\Users\MyProject\MyProject.gdb\StudyArea", "CREATE_REPORT", '', r"C:\Users\MyProject\Reports", "PDF")

@@ -1,18 +1,20 @@
-#---------------------------------------------------------------------------
-# Name: ClassifyObjectsUsingDeepLearning_example02.py
-# Requirements: ArcGIS Image Server
-# Import system modules
-import arcpy
+# Import system modules  
+import arcpy  
+from arcpy.ia import *  
+ 
+# Check out the ArcGIS Image Analyst extension license 
+arcpy.CheckOutExtension("ImageAnalyst") 
+ 
+# Define input parameters
+in_raster = "C:/Classify_Objects/input_image.tif" 
+out_feature_class = "C:/Classify_Objects/MyProject.gdb/classified_results" 
+in_model_definition = "C:/Classify_Objects/BuildingDanmageClassifier.emd" 
+in_features = "C:/Classify_Objects/building_footprints.shp" 
+class_label_field = "Damaged_or_Undamaged"
+model_arguments = "padding 0;batch_size 4"
+process_all_raster_items = "PROCESS_AS_MOSAICKED_IMAGE"
 
-# Set local variables
-inputRaster = "https://myserver/rest/services/Buildings/ImageServer"
-inputFeatures = "https://myserver/rest/services/Hosted/BuildingFootprints/FeatureServer/0"
-inputModel = "https://myportal/sharing/rest/content/items/itemId"
-outputName = "BuildingDamage"
-modelArguments = "batch_size 4"
-classLabelField = "ClassLabel"
-processingMode = "PROCESS_AS_MOSAICKED_IMAGE"
-
-# Execute Classify Objects Using Deep Learning 
-arcpy.ra.ClassifyObjectsUsingDeepLearning(inputRaster, inputFeatures, 
-	inputModel, outputName, modelArguments, classLabelField , processingMode)
+# Execute 
+ClassifyObjectsUsingDeepLearning(in_raster, out_feature_class, in_model_definition,
+	in_features, class_label_field,  
+	process_all_raster_items, model_arguments)

@@ -1,39 +1,44 @@
-# Name: Viewshed_3d_Ex_02.py
+# Name: Viewshed2_Ex_02.py
 # Description: Determines the raster surface locations visible to a set of
 #              observer features.
-# Requirements: 3D Analyst Extension
+# Requirements: Spatial Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
+from arcpy.sa import *
 
 # Set environment settings
-env.workspace = "C:/data"
+env.workspace = "C:/sapyexamples/data"
 
-
-parmSurface = "elevation"
-parmObservers = "obser2.shp"
-parmOutput = "c:/output/outvshd02"
-parmAGL = ""
-parmAnalysisType="OBSERVERS"
-parmVerticalError = ""
-parmAnalysisRelationTable = "C:/output/obser_region2.dbf"
-parmRefractCoeff = ""
-parmSurfaceOffset = "offsetb"
-parmObserverElevation="spot"
-parm_ObserverOffset="offseta"
-parmInnerRadius = "radius1"
-parmInnerIs3D="False"
-parmOuterRadius = "radius2"
-parmOuterIs3D="True"
-parmAz1 = "azimuth1"
-parmAz2 = "azimuth2"
-parmVert1 = "vert1"
-parmVert2 = "vert2"
+# set local variables
+inRaster = "elevation"
+inObservers = "obser2.shp"
+outAGL = ""
+analysisType = "OBSERVERS"
+verticalError = ""
+outAnalysisRelationTable = "C:/sapyexamples/output/obser_region2.dbf"
+refractCoeff = ""
+surfaceOffset = "offsetb"
+observerElevation = "spot"
+observerOffset = "offseta"
+innerRadius = "radius1"
+innerIs3D = "False"
+outerRadius = "radius2"
+outerIs3D = "True"
+horizStartAngle = "azimuth1"
+horizEndAngle = "azimuth2"
+vertUpperAngle = "vert1"
+vertLowerAngle = "vert2"
+analysisMethod = "ALL_SIGHTLINES"
 
 # Execute Viewshed2
-result = arcpy.Viewshed2_3d(parmSurface, parmObservers, parmOutput, parmAGL,
-parmAnalysisType, parmVerticalError, parmAnalysisRelationTable,
-parmRefractCoeff, parmSurfaceOffset, parmObserverElevation,
-parm_ObserverOffset,parmInnerRadius, parmInnerIs3D, parmOuterRadius,
-parmOuterIs3D, parmAz1, parmAz2, parmVert1, parmVert2)
+outViewshed2 = Viewshed2(inRaster, inObservers, outAGL, analysisType,
+                         verticalError, outAnalysisRelationTable, refractCoeff,
+                         surfaceOffset, observerElevation, observerOffset,
+                         innerRadius, innerIs3D, outerRadius, outerIs3D,
+                         horizStartAngle, horizEndAngle, vertUpperAngle,
+                         vertLowerAngle, analysisMethod)
+
+# Save the output
+outViewshed2.save("C:/sapyexamples/output/outvwshd2_02")

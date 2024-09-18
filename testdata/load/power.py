@@ -1,22 +1,25 @@
 # Name: Power_Ex_02.py
-# Description: Raises the cells in a raster to the power of the values
+# Description: Raises the pixels in a raster to the power of the values
 #              found in another raster
-# Requirements: Spatial Analyst Extension
+# Requirements: Image Analyst Extension
 
 # Import system modules
 import arcpy
 from arcpy import env
-from arcpy.sa import *
+from arcpy.ia import *
 
 # Set environment settings
-env.workspace = "C:/sapyexamples/data"
+env.workspace = "C:/iapyexamples/data"
 
 # Set local variables
 inRaster1 = "degs"
 inRaster2 = "cost"
 
+# Check out the ArcGIS Image Analyst extension license
+arcpy.CheckOutExtension("ImageAnalyst")
+
 # Execute Power
 outPower = Power(inRaster1, inRaster2)
 
 # Save the output 
-outPower.save("C:/sapyexamples/output/outpower.img")
+outPower.save("C:/iapyexamples/output/outpower.img")
