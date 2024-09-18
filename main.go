@@ -18,5 +18,5 @@ package main
 import "github.com/marcelo-fm/arctracker/cmd"
 
 func main() {
-	cmd.Execute()
+	cmd.MainProcess()
 }
