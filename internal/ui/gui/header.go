@@ -23,5 +23,5 @@ func AddHeader(a fyne.App, content fyne.CanvasObject) fyne.CanvasObject {
 		layout.NewSpacer(),
 		JustifyCenter(themes),
 	)
-	return container.NewPadded(container.NewBorder(header, nil, nil, nil, content))
+	return container.NewPadded(container.NewBorder(header, BottomInfo(), nil, nil, content))
 }
