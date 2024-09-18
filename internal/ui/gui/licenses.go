@@ -39,7 +39,7 @@ func NewDownloadButtons(licenses []model.License, w fyne.Window) fyne.CanvasObje
 		}, w)
 	})
 	csvBtn := widget.NewButtonWithIcon("CSV", theme.DownloadIcon(), func() {
-		dialog.ShowFileSave(func(file fyne.URIWriteCloser, err error) {
+		saveFileDialog := dialog.NewFileSave(func(file fyne.URIWriteCloser, err error) {
 			if err != nil {
 				dialog.ShowError(err, w)
 				return
@@ -60,6 +60,8 @@ func NewDownloadButtons(licenses []model.License, w fyne.Window) fyne.CanvasObje
 				return
 			}
 		}, w)
+		saveFileDialog.Resize(fyne.NewSize(1024, 720))
+		saveFileDialog.Show()
 	})
 	buttons.Add(jsonBtn)
 	buttons.Add(csvBtn)

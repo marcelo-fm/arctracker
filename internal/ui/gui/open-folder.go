@@ -23,6 +23,7 @@ func NewOpenFolderDialog(folder binding.String, w fyne.Window) fyne.CanvasObject
 		}
 		folder.Set(strings.TrimPrefix(l.String(), "file://"))
 	}, w)
+	openFolderDialog.Resize(fyne.NewSize(1024, 720))
 	openFolderButton := widget.NewButtonWithIcon("Selecionar Diretório", theme.FolderOpenIcon(), func() {
 		openFolderDialog.Show()
 	})
