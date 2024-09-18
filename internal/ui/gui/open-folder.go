@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/lang"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -24,7 +25,7 @@ func NewOpenFolderDialog(folder binding.String, w fyne.Window) fyne.CanvasObject
 		folder.Set(strings.TrimPrefix(l.String(), "file://"))
 	}, w)
 	openFolderDialog.Resize(fyne.NewSize(1024, 720))
-	openFolderButton := widget.NewButtonWithIcon("Selecionar Diretório", theme.FolderOpenIcon(), func() {
+	openFolderButton := widget.NewButtonWithIcon(lang.L("Select Folder"), theme.FolderOpenIcon(), func() {
 		openFolderDialog.Show()
 	})
 	centeredButton := JustifyCenter(openFolderButton)

@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/lang"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/marcelo-fm/arctracker/assets"
@@ -34,7 +35,7 @@ func CreateToggleTheme(a fyne.App, imgContainer *fyne.Container) fyne.CanvasObje
 	imgContainer.RemoveAll()
 	imgContainer.Add(image)
 	themes := container.NewGridWithColumns(2,
-		widget.NewButton("Dark", func() {
+		widget.NewButton(lang.L("Dark"), func() {
 			a.Settings().SetTheme(&forcedVariant{Theme: theme.DefaultTheme(), variant: theme.VariantDark})
 			image := canvas.NewImageFromResource(assets.LogoDark)
 			image.ScaleMode = canvas.ImageScaleFastest
@@ -42,7 +43,7 @@ func CreateToggleTheme(a fyne.App, imgContainer *fyne.Container) fyne.CanvasObje
 			imgContainer.RemoveAll()
 			imgContainer.Add(image)
 		}),
-		widget.NewButton("Light", func() {
+		widget.NewButton(lang.L("Light"), func() {
 			a.Settings().SetTheme(&forcedVariant{Theme: theme.DefaultTheme(), variant: theme.VariantLight})
 			image := canvas.NewImageFromResource(assets.LogoLight)
 			image.ScaleMode = canvas.ImageScaleFastest

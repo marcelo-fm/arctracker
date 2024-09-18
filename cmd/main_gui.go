@@ -9,8 +9,10 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/lang"
 	"github.com/gocolly/colly"
 	"github.com/gocolly/colly/extensions"
+	"github.com/marcelo-fm/arctracker/assets"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/marcelo-fm/arctracker/internal/ui/gui"
 	"github.com/rs/zerolog"
@@ -56,6 +58,7 @@ func MainProcess() {
 	extensions.RandomUserAgent(c)
 	s := scraper.New(c)
 	a := app.NewWithID("MarceloFM.ArcTracker")
+	lang.AddTranslationsFS(assets.Translations, "translation")
 	w := a.NewWindow("ArcTracker")
 	greeter := gui.NewGreeterWindow(&s, a, w)
 	w.SetContent(greeter)

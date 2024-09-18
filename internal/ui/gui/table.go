@@ -6,6 +6,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/lang"
 	"fyne.io/fyne/v2/widget"
 	"github.com/marcelo-fm/arctracker/internal/model"
 )
@@ -56,7 +57,7 @@ func NewTable(licenses []model.License) *widget.Table {
 			label.SetText(fmt.Sprint(id.Row))
 			return
 		}
-		label.SetText(headers[id.Col])
+		label.SetText(lang.L(headers[id.Col]))
 	}
 
 	return tb

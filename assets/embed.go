@@ -2,13 +2,12 @@ package assets
 
 import (
 	"embed"
-	"io/fs"
 
 	"fyne.io/fyne/v2"
 )
 
-//go:embed *
-var Assets embed.FS
+//go:embed translations
+var Translations embed.FS
 
 //go:embed arctracker-logo-dark.png
 var LogoContentDark []byte
@@ -21,10 +20,6 @@ var IconContentDark []byte
 
 //go:embed icons/sun.png
 var IconContentLight []byte
-
-func LoadResource(name string) ([]byte, error) {
-	return fs.ReadFile(Assets, name)
-}
 
 var LogoDark, LogoLight, IconDark, IconLight fyne.Resource
 

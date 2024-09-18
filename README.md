@@ -13,11 +13,29 @@ in your arcpy python code.
 
 ## Description
 
-ArcTracker is a CLI application that search through the ArcGIS documentation for
-a tool licensing. It can be used by passing the path of a repository as an
+ArcTracker is an application that search through the ArcGIS documentation for
+a tool licensing. It can be used in the CLI by passing the path of a repository as an
 argument, and it will scrape the licensing for each tool used in the python
 scripts. It can be also used within a pipeline, by reading the command of a tool
 passed in the pipeline, when executed without arguments.
+
+There's also a graphical application available, that will show a table and
+allow to download a CSV table and a JSON file.
+
+## Usage
+
+### Graphical interface
+
+If you downloaded the graphical interface version of the application, you can
+search through a repository by selecting the folder and clicking in Search Licenses.
+
+ArcTracker has two ways of using it. First is by recursively searching for arcpy tools used within a project. To do that, simply pass the path of the directory to view a interactive table of the tools used in the project and the level of licenses required to run them.
+
+![ArcTracker Usage](/assets/arctracker.gif)
+
+You can also pass the flag `--json` to return the output as JSON, or the flag `--csv` to return the output as a CSV.
+
+The `--output` flag is used to write the JSON or CSV output into a file.
 
 ## Optional Requirements
 
@@ -51,13 +69,3 @@ curl -L -o https://github.com/marcelo-fm/arctracker/releases/download/v1.1.0/arc
 ```
 
 I'm working in creating packages for most linux distros and windows package managers.
-
-## Usage
-
-ArcTracker has two ways of using it. First is by recursively searching for arcpy tools used within a project. To do that, simply pass the path of the directory to view a interactive table of the tools used in the project and the level of licenses required to run them.
-
-![ArcTracker Usage](/assets/arctracker.gif)
-
-You can also pass the flag `--json` to return the output as JSON, or the flag `--csv` to return the output as a CSV.
-
-The `--output` flag is used to write the JSON or CSV output into a file.

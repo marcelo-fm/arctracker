@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/lang"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/marcelo-fm/arctracker/internal/model"
@@ -50,7 +51,7 @@ func NewGreeterWindow(s *scraper.Scraper, a fyne.App, w fyne.Window) fyne.Canvas
 	folder := binding.NewString()
 	folderEntry := widget.NewEntryWithData(folder)
 	openFolderButton := NewOpenFolderDialog(folder, w)
-	startProcess := JustifyCenter(widget.NewButton("Buscar Licenças", func() {
+	startProcess := JustifyCenter(widget.NewButton(lang.L("Search Licenses"), func() {
 		path, err := folder.Get()
 		if err != nil {
 			errd := dialog.NewError(err, w)
@@ -58,7 +59,7 @@ func NewGreeterWindow(s *scraper.Scraper, a fyne.App, w fyne.Window) fyne.Canvas
 			return
 		}
 		if path == "" {
-			errd := dialog.NewError(errors.New("Escolha um diretório válido!"), w)
+			errd := dialog.NewError(errors.New(lang.L("Pick a valid folder!")), w)
 			errd.Show()
 			return
 		}
