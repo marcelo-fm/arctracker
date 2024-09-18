@@ -28,7 +28,11 @@ func CLI(args []string) {
 	var isStdin bool
 	var path string
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.SetGlobalLevel(zerolog.Level(logLevel))
+	if logLevel == -1 {
+		zerolog.SetGlobalLevel(zerolog.Disabled)
+	} else {
+		zerolog.SetGlobalLevel(zerolog.Level(logLevel))
+	}
 	appConfigDir := viper.GetString("AppConfigDir")
 	cacheDir := filepath.Join(appConfigDir, "cache")
 	err = os.MkdirAll(cacheDir, 0755)

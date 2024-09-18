@@ -16,9 +16,14 @@ import (
 )
 
 func GUI() {
+	viper.SetDefault("gui", true)
 	var err error
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	zerolog.SetGlobalLevel(zerolog.Level(logLevel))
+	if logLevel == -1 {
+		zerolog.SetGlobalLevel(zerolog.Disabled)
+	} else {
+		zerolog.SetGlobalLevel(zerolog.Level(logLevel))
+	}
 	appConfigDir := viper.GetString("AppConfigDir")
 	cacheDir := filepath.Join(appConfigDir, "cache")
 	err = os.MkdirAll(cacheDir, 0755)
@@ -28,10 +33,11 @@ func GUI() {
 	c := colly.NewCollector(
 		colly.AllowedDomains("pro.arcgis.com"),
 		colly.CacheDir(viper.GetString("cacheDir")),
+		colly.AllowURLRevisit(),
 	)
 	extensions.RandomUserAgent(c)
 	s := scraper.New(c)
-	a := app.New()
+	a := app.NewWithID("MarceloFM.ArcTracker")
 	w := a.NewWindow("ArcTracker")
 	greeter := gui.NewGreeterWindow(&s, a, w)
 	w.SetContent(greeter)
