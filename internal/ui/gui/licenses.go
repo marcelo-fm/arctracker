@@ -68,27 +68,13 @@ func NewDownloadButtons(licenses []model.License, w fyne.Window) fyne.CanvasObje
 	return buttons
 }
 
-func NewLicenseContent(obj *fyne.Container, licenses []model.License, w fyne.Window) *LicenseContent {
-	overview := widget.NewLabel(fmt.Sprintf("%d Licenças encontradas", len(licenses)))
+func NewLicenseContent(obj *fyne.Container, licenses []model.License, w fyne.Window) *fyne.Container {
+	overview := widget.NewLabel(fmt.Sprintf("%d ferramentas encontradas", len(licenses)))
 	downloads := NewDownloadButtons(licenses, w)
-	header := container.NewHBox(downloads, layout.NewSpacer(), overview, layout.NewSpacer(), layout.NewSpacer())
-	border := container.NewBorder(header, nil, nil, nil, NewTable(licenses))
+	header := container.NewGridWithColumns(3, container.NewHBox(downloads, layout.NewSpacer()), JustifyCenter(overview), layout.NewSpacer())
+	tb := NewTable(licenses)
+	border := container.NewBorder(header, nil, nil, nil, tb)
+	obj.RemoveAll()
 	obj.Add(border)
-	return &LicenseContent{
-		Licenses: licenses,
-		obj:      obj,
-	}
-}
-
-type LicenseContent struct {
-	Licenses []model.License
-	obj      fyne.CanvasObject
-}
-
-func (lc *LicenseContent) Toggle() {
-	if lc.obj.Visible() {
-		lc.obj.Hide()
-	} else {
-		lc.obj.Show()
-	}
+	return border
 }
