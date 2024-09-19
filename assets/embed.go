@@ -6,7 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 )
 
-//go:embed translations
+//go:embed translation
 var Translations embed.FS
 
 //go:embed arctracker-logo-dark.png
