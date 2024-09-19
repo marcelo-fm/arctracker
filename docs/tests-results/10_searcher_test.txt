@@ -1,0 +1,36 @@
+goos: linux
+goarch: amd64
+pkg: github.com/marcelo-fm/arctracker/internal/searcher
+cpu: Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz
+BenchmarkGrepSearch-12       	    1654	    755278 ns/op	   57570 B/op	     242 allocs/op
+BenchmarkGrepSearch-12       	    1560	    744059 ns/op	   57485 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1588	    744359 ns/op	   57412 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1519	    738024 ns/op	   57414 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1546	    761918 ns/op	   57478 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1623	    738418 ns/op	   57410 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1576	    736569 ns/op	   57465 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1608	    743865 ns/op	   57399 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1560	    794816 ns/op	   57466 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1605	    723699 ns/op	   57408 B/op	     241 allocs/op
+BenchmarkGUISearch-12        	   17496	     67837 ns/op	   37508 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17812	     68243 ns/op	   37512 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17613	     69049 ns/op	   37520 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17703	     71823 ns/op	   37523 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17744	     67560 ns/op	   37518 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17672	     67836 ns/op	   37523 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   18027	     67285 ns/op	   37516 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17748	     68769 ns/op	   37517 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17619	     67475 ns/op	   37505 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   18034	     67094 ns/op	   37518 B/op	     233 allocs/op
+BenchmarkRipGrepSearch-12    	     211	   5878802 ns/op	  135153 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     193	   6324339 ns/op	  135225 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     176	   6396450 ns/op	  135320 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     205	   6234402 ns/op	  135928 B/op	     458 allocs/op
+BenchmarkRipGrepSearch-12    	     190	   6198246 ns/op	  135627 B/op	     457 allocs/op
+BenchmarkRipGrepSearch-12    	     193	   6193143 ns/op	  135230 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     196	   6295567 ns/op	  135271 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     200	   5921353 ns/op	  135173 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     200	   5815465 ns/op	  135191 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     208	   6042028 ns/op	  135812 B/op	     458 allocs/op
+PASS
+ok  	github.com/marcelo-fm/arctracker/internal/searcher	74.702s

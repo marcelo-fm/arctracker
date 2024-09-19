@@ -1,0 +1,66 @@
+goos: linux
+goarch: amd64
+pkg: github.com/marcelo-fm/arctracker/internal/searcher
+cpu: Intel(R) Core(TM) i5-10400F CPU @ 2.90GHz
+BenchmarkGrepSearch-12       	    1222	   1004898 ns/op	   57653 B/op	     242 allocs/op
+BenchmarkGrepSearch-12       	    1471	    803628 ns/op	   57491 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1497	    794463 ns/op	   57410 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1587	    881222 ns/op	   57466 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1550	    797040 ns/op	   57418 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1341	    794518 ns/op	   57502 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1502	    803156 ns/op	   57393 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1645	    730851 ns/op	   57397 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1502	    780144 ns/op	   57391 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1448	    740413 ns/op	   57424 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1618	    729646 ns/op	   57462 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1572	    755252 ns/op	   57416 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1510	    748667 ns/op	   57420 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1593	    754348 ns/op	   57401 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1662	    715421 ns/op	   57397 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1654	    718761 ns/op	   57456 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1660	    794462 ns/op	   57401 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1624	    718333 ns/op	   57448 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1575	    760992 ns/op	   57411 B/op	     241 allocs/op
+BenchmarkGrepSearch-12       	    1566	    740198 ns/op	   57464 B/op	     241 allocs/op
+BenchmarkGUISearch-12        	   16074	     72712 ns/op	   37529 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17204	     70882 ns/op	   37531 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16735	     70252 ns/op	   37517 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17620	     78784 ns/op	   37524 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   14948	     72217 ns/op	   37529 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   15619	     80417 ns/op	   37525 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   15336	     72135 ns/op	   37519 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16825	     71158 ns/op	   37526 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16938	     74168 ns/op	   37504 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16974	     79034 ns/op	   37527 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   15781	     80638 ns/op	   37534 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   14156	     77184 ns/op	   37521 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   15982	     76252 ns/op	   37520 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16567	     75514 ns/op	   37510 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16219	     73650 ns/op	   37514 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   15681	     79090 ns/op	   37519 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   16414	     69475 ns/op	   37519 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17685	     68552 ns/op	   37513 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17430	     70747 ns/op	   37524 B/op	     233 allocs/op
+BenchmarkGUISearch-12        	   17590	     67761 ns/op	   37515 B/op	     233 allocs/op
+BenchmarkRipGrepSearch-12    	     218	   5541861 ns/op	  135112 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     212	   6400179 ns/op	  135833 B/op	     458 allocs/op
+BenchmarkRipGrepSearch-12    	     172	   5871216 ns/op	  135781 B/op	     458 allocs/op
+BenchmarkRipGrepSearch-12    	     202	   5951928 ns/op	  135221 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     213	   5717631 ns/op	  135100 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     210	   5663875 ns/op	  135142 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     214	   5899419 ns/op	  135834 B/op	     458 allocs/op
+BenchmarkRipGrepSearch-12    	     200	   5867345 ns/op	  135959 B/op	     459 allocs/op
+BenchmarkRipGrepSearch-12    	     199	   5627995 ns/op	  135227 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     211	   5616476 ns/op	  135146 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     208	   5711661 ns/op	  135128 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     213	   5711730 ns/op	  135097 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     202	   5635773 ns/op	  135139 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     208	   5726209 ns/op	  135491 B/op	     457 allocs/op
+BenchmarkRipGrepSearch-12    	     212	   5626761 ns/op	  135218 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     207	   5557374 ns/op	  135185 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     208	   5541375 ns/op	  135173 B/op	     456 allocs/op
+BenchmarkRipGrepSearch-12    	     211	   5850595 ns/op	  135844 B/op	     458 allocs/op
+BenchmarkRipGrepSearch-12    	     212	   5668715 ns/op	  135401 B/op	     457 allocs/op
+BenchmarkRipGrepSearch-12    	     211	   5856235 ns/op	  135177 B/op	     456 allocs/op
+PASS
+ok  	github.com/marcelo-fm/arctracker/internal/searcher	152.087s
