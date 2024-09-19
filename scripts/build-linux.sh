@@ -1,5 +1,4 @@
 #!/bin/bash
 
-GOOS=linux \
-	GOARCH=amd64 \
-	go build -o ./bin/arctracker main.go -tags prod
+fyne-cross linux --tags=gui && cp fyne-cross/dist/linux-amd64/ArcTracker.tar.xz ./ArcTracker-gui.tar.xz
+fyne-cross linux && cp fyne-cross/dist/linux-amd64/ArcTracker.tar.xz ./.

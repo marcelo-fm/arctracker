@@ -1,5 +1,4 @@
 #!/bin/bash
 
-GOOS=windows \
-	GOARCH=amd64 \
-	go build -o ./bin/arctracker.exe main.go -tags prod
+fyne-cross windows --tags=gui && cp fyne-cross/dist/windows-amd64/ArcTracker.exe.zip ./ArcTracker-gui.exe.zip
+fyne-cross windows --console && cp fyne-cross/dist/windows-amd64/ArcTracker.exe.zip ./ArcTracker.exe.zip
