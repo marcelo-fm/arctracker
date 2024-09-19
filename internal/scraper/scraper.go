@@ -6,18 +6,21 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/marcelo-fm/arctracker/internal/model"
 	"github.com/rs/zerolog/log"
+	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
-func New(c *colly.Collector) Scraper {
+func New(c *colly.Collector, storage *sqlite3.Storage) Scraper {
 	return Scraper{
-		c: c,
-		l: &model.License{},
+		c:       c,
+		l:       &model.License{},
+		Storage: storage,
 	}
 }
 
 type Scraper struct {
-	c *colly.Collector
-	l *model.License
+	c       *colly.Collector
+	l       *model.License
+	Storage *sqlite3.Storage
 }
 
 func (s *Scraper) SetupLicenseScraper() {

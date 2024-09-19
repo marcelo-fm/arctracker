@@ -23,7 +23,9 @@ type Searcher interface {
 // Parser recebe um Searcher e um Scraper, e retorna uma lista com as licenças, ou nil
 // se não houver nenhuma
 func Parse(searcher Searcher, s *scraper.Scraper) ([]model.License, error) {
-	return sequentialParse(searcher, s)
+	licenses, err := sequentialParse(searcher, s)
+	s.Storage.Close()
+	return licenses, err
 }
 
 func parseCommand(match model.Match) string {

@@ -4,12 +4,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gocolly/colly"
-	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
 func TestPipelineParse(t *testing.T) {
@@ -19,13 +18,9 @@ func TestPipelineParse(t *testing.T) {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	viper.SetDefault("pattern", "arcpy")
 	viper.SetDefault("baseURL", "https://pro.arcgis.com/en/pro-app/latest/tool-reference/")
-	cacheDir := viper.GetString("cacheDir")
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(cacheDir),
-	)
-	extensions.RandomUserAgent(c)
-	s := scraper.New(c)
+	storage := &sqlite3.Storage{Filename: viper.GetString("storage")}
+	c, _ := scraper.NewCollector(storage)
+	s := scraper.New(c, storage)
 	srch := setupSearcher(t, false)
 	licencas, err := pipelineParse(srch, &s)
 	if err != nil {
@@ -43,16 +38,12 @@ func BenchmarkPipelineParse(b *testing.B) {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	viper.SetDefault("pattern", "arcpy")
 	viper.SetDefault("baseURL", "https://pro.arcgis.com/en/pro-app/latest/tool-reference/")
-	cacheDir := viper.GetString("cacheDir")
 	b.ResetTimer()
 	for i := 0; i <= b.N; i++ {
 		b.StopTimer()
-		c := colly.NewCollector(
-			colly.AllowedDomains("pro.arcgis.com"),
-			colly.CacheDir(cacheDir),
-		)
-		extensions.RandomUserAgent(c)
-		s := scraper.New(c)
+		storage := &sqlite3.Storage{Filename: viper.GetString("storage")}
+		c, _ := scraper.NewCollector(storage)
+		s := scraper.New(c, storage)
 		srch := setupSearcher(b, true)
 		b.StartTimer()
 		licencas, err := pipelineParse(srch, &s)

@@ -5,11 +5,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gocolly/colly"
-	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
 func TestMain(m *testing.M) {
@@ -23,16 +22,14 @@ func TestMain(m *testing.M) {
 		log.Error().Err(err).Msg("Error creating cache directory.")
 	}
 	viper.SetDefault("cacheDir", cacheDir)
+	viper.SetDefault("storage", filepath.Join(appConfigDir, "results.db"))
 	os.Exit(m.Run())
 }
 
 func TestScrape(t *testing.T) {
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(viper.GetString("cacheDir")),
-	)
-	extensions.RandomUserAgent(c)
-	s := scraper.New(c)
+	storage := &sqlite3.Storage{Filename: viper.GetString("storage")}
+	c, _ := scraper.NewCollector(storage)
+	s := scraper.New(c, storage)
 	s.SetupLicenseScraper()
 
 	// Replace with a valid URL from pro.arcgis.com
@@ -69,13 +66,9 @@ func TestScrape(t *testing.T) {
 }
 
 func BenchmarkScrape(b *testing.B) {
-	cacheDir := viper.GetString("cacheDir")
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(cacheDir),
-	)
-	extensions.RandomUserAgent(c)
-	s := scraper.New(c)
+	storage := &sqlite3.Storage{Filename: viper.GetString("storage")}
+	c, _ := scraper.NewCollector(storage)
+	s := scraper.New(c, storage)
 	s.SetupLicenseScraper()
 
 	// Replace with a valid URL from pro.arcgis.com
