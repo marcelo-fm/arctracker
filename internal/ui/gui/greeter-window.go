@@ -2,7 +2,6 @@ package gui
 
 import (
 	"errors"
-	"runtime"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -16,30 +15,6 @@ import (
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/marcelo-fm/arctracker/internal/searcher"
 )
-
-func newCustomSearcher(path string) *customSearcher {
-	isStdin := false
-	var srch parser.Searcher
-	switch runtime.GOOS {
-	case "linux":
-		srch = searcher.NewGrep(isStdin, path)
-	case "windows":
-		srch = searcher.NewSelectString(isStdin, path)
-	default:
-		srch = searcher.NewRipgrep(isStdin, path)
-	}
-	matches, err := srch.Search()
-	return &customSearcher{matches: matches, err: err}
-}
-
-type customSearcher struct {
-	matches []model.Match
-	err     error
-}
-
-func (s *customSearcher) Search() ([]model.Match, error) {
-	return s.matches, s.err
-}
 
 func NewGreeterWindow(s *scraper.Scraper, a fyne.App, w fyne.Window) fyne.CanvasObject {
 	loading := widget.NewProgressBarInfinite()
@@ -63,18 +38,13 @@ func NewGreeterWindow(s *scraper.Scraper, a fyne.App, w fyne.Window) fyne.Canvas
 			errd.Show()
 			return
 		}
-		srchc := make(chan *customSearcher)
-		go func() {
-			srch := newCustomSearcher(path)
-			srchc <- srch
-		}()
+		srch := searcher.NewGUI(path)
 		licensesc := make(chan []model.License)
 		errc := make(chan error)
 		tb.Hide()
 		loading.Show()
 		loading.Start()
 		go func() {
-			srch := <-srchc
 			licenses, err := parser.Parse(srch, s)
 			licensesc <- licenses
 			errc <- err
