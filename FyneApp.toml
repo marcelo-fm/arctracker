@@ -1,14 +1,8 @@
-website = "https://github.com/marcelo-fm/arctracker"
+Website = "https://github.com/marcelo-fm/arctracker"
 
 [Details]
-Icon = "Icon.png"
-Name = "ArcTracker"
-ID = "com.marcelofm.arctracker"
-Version = "1.0.0"
-Build = 1
-
-[LinuxAndBSD]
-GenericName = "Arcgis License Tracker"
-Categories = ["Development"]
-Comment = "Track the licensing necessary in you python arcpy files."
-Keywords = ["arcGIS", "arcpy", "licensing"]
+  Icon = "Icon.png"
+  Name = "ArcTracker"
+  ID = "com.marcelofm.arctracker"
+  Version = "1.0.0"
+  Build = 7
