@@ -87,6 +87,7 @@ func initConfig() {
 			cobra.CheckErr(err)
 		}
 		viper.SetDefault("cacheDir", cacheDir)
+		viper.SetDefault("storage", filepath.Join(appConfigDir, "results.db"))
 		viper.AddConfigPath(appConfigDir)
 		viper.SetConfigType("toml")
 		viper.SetConfigName("config")
