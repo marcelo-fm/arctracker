@@ -6,13 +6,12 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"github.com/gocolly/colly"
-	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/marcelo-fm/arctracker/internal/ui/gui"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
 func GUI() {
@@ -30,13 +29,15 @@ func GUI() {
 	if err != nil {
 		log.Error().Err(err).Msg("Error creating cache directory.")
 	}
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(viper.GetString("cacheDir")),
-		colly.AllowURLRevisit(),
-	)
-	extensions.RandomUserAgent(c)
-	s := scraper.New(c)
+	storage := &sqlite3.Storage{
+		Filename: viper.GetString("storage"),
+	}
+	c, err := scraper.NewCollector(storage)
+	if err != nil {
+		log.Error().Err(err).Msg("Error in setting storage")
+		os.Exit(1)
+	}
+	s := scraper.New(c, storage)
 	a := app.NewWithID("MarceloFM.ArcTracker")
 	w := a.NewWindow("ArcTracker")
 	greeter := gui.NewGreeterWindow(&s, a, w)

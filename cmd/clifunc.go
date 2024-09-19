@@ -9,8 +9,6 @@ import (
 	"runtime"
 
 	"github.com/charmbracelet/bubbles/table"
-	"github.com/gocolly/colly"
-	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/internal/model"
 	"github.com/marcelo-fm/arctracker/internal/parser"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
@@ -20,6 +18,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
 func CLI(args []string) {
@@ -39,12 +38,15 @@ func CLI(args []string) {
 	if err != nil {
 		log.Error().Err(err).Msg("Error creating cache directory.")
 	}
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(viper.GetString("cacheDir")),
-	)
-	extensions.RandomUserAgent(c)
-	s := scraper.New(c)
+	storage := &sqlite3.Storage{
+		Filename: viper.GetString("storage"),
+	}
+	c, err := scraper.NewCollector(storage)
+	if err != nil {
+		log.Error().Err(err).Msg("Error in setting storage")
+		os.Exit(1)
+	}
+	s := scraper.New(c, storage)
 	if len(args) == 0 {
 		isStdin = true
 	} else {

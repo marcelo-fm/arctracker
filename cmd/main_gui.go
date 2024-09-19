@@ -10,13 +10,13 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/lang"
-	"github.com/gocolly/colly"
-	"github.com/gocolly/colly/extensions"
 	"github.com/marcelo-fm/arctracker/assets"
 	"github.com/marcelo-fm/arctracker/internal/scraper"
 	"github.com/marcelo-fm/arctracker/internal/ui/gui"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
+	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
 func MainProcess() {
@@ -39,6 +39,7 @@ func MainProcess() {
 		os.Exit(1)
 	}
 	viper.SetDefault("cacheDir", cacheDir)
+	viper.SetDefault("storage", filepath.Join(appConfigDir, "results.db"))
 	viper.AddConfigPath(appConfigDir)
 	viper.SetConfigType("toml")
 	viper.SetConfigName("config")
@@ -50,13 +51,15 @@ func MainProcess() {
 	if err != nil {
 		os.Exit(1)
 	}
-	c := colly.NewCollector(
-		colly.AllowedDomains("pro.arcgis.com"),
-		colly.CacheDir(viper.GetString("cacheDir")),
-		colly.AllowURLRevisit(),
-	)
-	extensions.RandomUserAgent(c)
-	s := scraper.New(c)
+	storage := &sqlite3.Storage{
+		Filename: viper.GetString("storage"),
+	}
+	c, err := scraper.NewCollector(storage)
+	if err != nil {
+		log.Error().Err(err).Msg("Error in setting storage")
+		os.Exit(1)
+	}
+	s := scraper.New(c, storage)
 	a := app.NewWithID("MarceloFM.ArcTracker")
 	lang.AddTranslationsFS(assets.Translations, "translation")
 	w := a.NewWindow("ArcTracker")
