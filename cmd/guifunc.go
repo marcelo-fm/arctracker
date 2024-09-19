@@ -11,7 +11,6 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
-	"github.com/velebak/colly-sqlite3-storage/colly/sqlite3"
 )
 
 func GUI() {
@@ -29,9 +28,8 @@ func GUI() {
 	if err != nil {
 		log.Error().Err(err).Msg("Error creating cache directory.")
 	}
-	storage := &sqlite3.Storage{
-		Filename: viper.GetString("storage"),
-	}
+	scraper.InitStorage()
+	storage := scraper.NewStorage()
 	c, err := scraper.NewCollector(storage)
 	if err != nil {
 		log.Error().Err(err).Msg("Error in setting storage")

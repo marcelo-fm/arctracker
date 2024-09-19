@@ -24,7 +24,6 @@ type Searcher interface {
 // se não houver nenhuma
 func Parse(searcher Searcher, s *scraper.Scraper) ([]model.License, error) {
 	licenses, err := sequentialParse(searcher, s)
-	s.Storage.Close()
 	return licenses, err
 }
 
