@@ -27,16 +27,22 @@ func NewTable(licenses []model.License) *widget.Table {
 		func(id widget.TableCellID, cell fyne.CanvasObject) {
 			obj := cell.(*fyne.Container)
 			switch id.Col {
-			case 5:
-				link := obj.Objects[1].(*widget.Hyperlink)
-				link.SetText(rows[id.Row][0])
-				link.SetURLFromString(rows[id.Row][id.Col])
-			default:
+			case 2, 3, 4:
 				label := obj.Objects[0].(*widget.Label)
 				label.SetText(rows[id.Row][id.Col])
 				if id.Col >= 2 && id.Col <= 4 {
 					label.TextStyle.Bold = strings.Contains(label.Text, "Yes")
 				}
+				return
+			case 5:
+				link := obj.Objects[1].(*widget.Hyperlink)
+				link.SetText(rows[id.Row][0])
+				link.SetURLFromString(rows[id.Row][id.Col])
+				return
+			default:
+				label := obj.Objects[0].(*widget.Label)
+				label.SetText(rows[id.Row][id.Col])
+				return
 			}
 		},
 	)
