@@ -11,7 +11,7 @@ import (
 )
 
 func NewBottomInfo() *fyne.Container {
-	author := widget.NewLabel(lang.L("Author") + ": Marcelo Foschiera de Mesquita")
+	author := widget.NewLabel(lang.L("Author") + ": Marcelo Mesquita")
 	github := widget.NewHyperlink("Github", nil)
 	github.SetURLFromString("https://github.com/marcelo-fm")
 	linkedin := widget.NewHyperlink("Linkedin", nil)
