@@ -48,7 +48,7 @@ func CLI(args []string) {
 	} else {
 		path = args[0]
 	}
-	srch := searcher.NewGUI(path)
+	srch := searcher.NewStandard(isStdin, path)
 	licenses, err = parser.Parse(srch, &s)
 	if err != nil {
 		log.Error().Err(err).Msg("Error in parsing licenses.")

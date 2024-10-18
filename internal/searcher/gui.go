@@ -2,6 +2,7 @@ package searcher
 
 import (
 	"bufio"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -12,17 +13,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewGUI(isStdin bool, path string) *GUI {
-	return &GUI{isStdin: isStdin, path: path}
+func NewStandard(isStdin bool, path string) *Standard {
+	return &Standard{isStdin: isStdin, path: path}
 }
 
-type GUI struct {
+type Standard struct {
 	isStdin bool
 	path    string
 }
 
-func (s *GUI) Search() ([]model.Match, error) {
+func (s *Standard) Search() ([]model.Match, error) {
 	var matches []model.Match
+	if s.isStdin {
+		return s.search(os.Stdin, s.path)
+	}
 	err := filepath.WalkDir(s.path, func(path string, d fs.DirEntry, err error) error {
 		filename := d.Name()
 		if !strings.HasSuffix(filename, ".py") {
@@ -31,7 +35,11 @@ func (s *GUI) Search() ([]model.Match, error) {
 		log.Debug().Msgf("raw path: %s", path)
 		cleanPath := filepath.Clean(path)
 		log.Debug().Msgf("Searching in path: %s", cleanPath)
-		fileMatches, err := s.searchFile(cleanPath)
+		f, err := os.Open(cleanPath)
+		if err != nil {
+			return err
+		}
+		fileMatches, err := s.search(f, cleanPath)
 		if err != nil {
 			return err
 		}
@@ -41,26 +49,10 @@ func (s *GUI) Search() ([]model.Match, error) {
 	return matches, err
 }
 
-// TODO: finish this
-func (s *GUI) searchStdin() {
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if !strings.Contains(line, pattern) {
-			continue
-		}
-	}
-}
-
-func (s *GUI) searchFile(filepath string) ([]model.Match, error) {
-	var err error
+func (s *Standard) search(reader io.Reader, filepath string) ([]model.Match, error) {
 	pattern := viper.GetString("pattern")
 	var matches []model.Match
-	f, err := os.Open(filepath)
-	if err != nil {
-		return nil, err
-	}
-	scanner := bufio.NewScanner(f)
+	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if !strings.Contains(line, pattern) {

@@ -38,7 +38,7 @@ func NewGreeterWindow(s *scraper.Scraper, a fyne.App, w fyne.Window) fyne.Canvas
 			errd.Show()
 			return
 		}
-		srch := searcher.NewGUI(path)
+		srch := searcher.NewStandard(false, path)
 		licensesc := make(chan []model.License)
 		errc := make(chan error)
 		tb.Hide()
