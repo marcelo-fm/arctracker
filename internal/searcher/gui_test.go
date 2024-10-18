@@ -8,9 +8,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-func TestNewGUI(t *testing.T) {
+func TestNewStandard(t *testing.T) {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	searcher := searcher.NewGUI("")
+	searcher := searcher.NewStandard(false, "")
 	if searcher == nil {
 		t.Fatal("Expected GUI struct, got nil.")
 	}
@@ -19,7 +19,7 @@ func TestNewGUI(t *testing.T) {
 func TestGUISearchWithPath(t *testing.T) {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	path := viper.GetString("testdata")
-	searcher := searcher.NewGUI(path)
+	searcher := searcher.NewStandard(false, path)
 	matches, err := searcher.Search()
 	if err != nil {
 		t.Fatalf("Error in searching in path %s", path)
@@ -31,7 +31,7 @@ func TestGUISearchWithPath(t *testing.T) {
 
 func BenchmarkGUISearch(b *testing.B) {
 	path := viper.GetString("testdata")
-	searcher := searcher.NewGUI(path)
+	searcher := searcher.NewStandard(false, path)
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	b.ResetTimer()
 	for i := 0; i <= b.N; i++ {
