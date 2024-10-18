@@ -3,10 +3,8 @@ package cmd
 import (
 	"encoding/csv"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/marcelo-fm/arctracker/internal/model"
@@ -50,20 +48,7 @@ func CLI(args []string) {
 	} else {
 		path = args[0]
 	}
-	var srch parser.Searcher
-	if searcher.HasRipgrepDeps() {
-		srch = searcher.NewRipgrep(isStdin, path)
-	} else {
-		switch runtime.GOOS {
-		case "linux":
-			srch = searcher.NewGrep(isStdin, path)
-		case "windows":
-			srch = searcher.NewSelectString(isStdin, path)
-		default:
-			fmt.Println("No searcher found, please install ripgrep to run the program.")
-			os.Exit(1)
-		}
-	}
+	srch := searcher.NewGUI(path)
 	licenses, err = parser.Parse(srch, &s)
 	if err != nil {
 		log.Error().Err(err).Msg("Error in parsing licenses.")

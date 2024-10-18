@@ -12,12 +12,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-func NewGUI(path string) *GUI {
-	return &GUI{path: path}
+func NewGUI(isStdin bool, path string) *GUI {
+	return &GUI{isStdin: isStdin, path: path}
 }
 
 type GUI struct {
-	path string
+	isStdin bool
+	path    string
 }
 
 func (s *GUI) Search() ([]model.Match, error) {
@@ -38,6 +39,17 @@ func (s *GUI) Search() ([]model.Match, error) {
 		return nil
 	})
 	return matches, err
+}
+
+// TODO: finish this
+func (s *GUI) searchStdin() {
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if !strings.Contains(line, pattern) {
+			continue
+		}
+	}
 }
 
 func (s *GUI) searchFile(filepath string) ([]model.Match, error) {
