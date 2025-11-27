@@ -34,6 +34,8 @@ func parseModule(moduleName string) string {
 		return "reality-mapping"
 	case "ra":
 		return "raster-analysis"
+	case "sa":
+		return "spatial-analyst"
 	case "agolservices":
 		return "ready-to-use"
 	case "stats":
